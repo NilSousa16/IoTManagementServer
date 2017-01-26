@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.2.0"
+	xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0"
+	xmlns:jaxws="http://cxf.apache.org/blueprint/jaxws" xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+	xmlns:cxf="http://cxf.apache.org/blueprint/core"
+	xsi:schemaLocation="
+ http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+ http://cxf.apache.org/blueprint/jaxws http://cxf.apache.org/schemas/blueprint/jaxws.xsd
+ http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+ http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+	<reference id="hazelcastInstance" interface="com.hazelcast.core.HazelcastInstance">
+	</reference>
+	
+	<reference id="clusterManager" interface="org.apache.karaf.cellar.core.ClusterManager">
+	</reference>
+
+	<reference id="groupManager" interface="org.apache.karaf.cellar.core.GroupManager">
+	</reference>
+
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>Área de Teste<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+<!-- 	<reference id="hazelcastGroupManager" interface="org.apache.karaf.cellar.hazelcast.HazelcastGroupManager"> -->
+<!-- 	</reference> -->
+	
+<!-- 	<reference id="hazelcastClusterManager" interface="org.apache.karaf.cellar.hazelcast.HazelcastClusterManager"> -->
+<!-- 	</reference> -->
+
+<!-- 	<bean id="group_create" class="br.ufba.dcc.wiser.fot.manager.DeviceMonitor" -->
+<!-- 		init-method="createGroup"> -->
+<!-- 		<property name="hgm" ref="hazelcastGroupManager" /> -->
+<!-- 		<property name="hcm" ref="hazelcastClusterManager" /> -->
+<!-- 	</bean> -->
+
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>Área de Teste<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+	<bean id="device_monitor" class="br.ufba.dcc.wiser.fot.manager.DeviceMonitor"
+		init-method="deviceMonitor">
+		<property name="instance" ref="hazelcastInstance" />
+		<property name="cluster" ref="clusterManager" />
+		<property name="group" ref="groupManager" />
+	</bean>	
+	
+	<bean id="monitor_address" class="br.ufba.dcc.wiser.fot.manager.MonitorAddress"
+		init-method="monitorAddress">
+		<property name="instance" ref="hazelcastInstance" />
+	</bean>		
+
+	<camelContext id="camel"
+		xmlns="http://camel.apache.org/schema/blueprint">
+		<route>
+			<from uri="timer://myTimer?period=10000" />
+			<to uri="bean:device_monitor?method=deviceMonitor" />
+		</route>		
+		
+		<route>
+			<from uri="timer://myTimer?period=7000" />
+			<to uri="bean:monitor_address?method=monitorAddress" />
+		</route>
+		
+	</camelContext>
+</blueprint>
