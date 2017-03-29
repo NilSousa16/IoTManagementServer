@@ -1,4 +1,4 @@
-package br.ufba.dcc.wiser.fot.manager;
+package br.ufba.dcc.wiser.fot.manager.administration;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

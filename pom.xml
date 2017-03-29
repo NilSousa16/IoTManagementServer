@@ -24,12 +24,29 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.3.7</version>
+				<version>2.3.7</version> <!-- A EXTENSÃO NÃO EXISTE NO EXEMPLO DO HIBERNATE --> <!--IN -->
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>br.ufba.dcc.wiser.fot.manager.Activator</Bundle-Activator>
-						<Export-Package>br.ufba.dcc.wiser.fot.manager</Export-Package>
+						<Bundle-Activator>br.ufba.dcc.wiser.fot.manager.administration.Activator</Bundle-Activator>
+						<Export-Package>
+<!-- 							br.ufba.dcc.wiser.fot.manager, -->
+<!-- 							org.hibernate.osgitest, IN -->
+<!--               				org.hibernate.osgitest.entity IN				 -->
+						</Export-Package>
+						<Import-Package> <!--IN -->
+							org.hibernate.jpa,
+             		 		org.apache.felix.service.command,
+              				org.apache.felix.gogo.commands,
+              				org.apache.karaf.shell.console,
+              				org.apache.karaf.shell.commands,
+			              	javax.persistence;version="[1.0.0,2.1.0]",
+			              	<!-- Needed for proxying's Javassist enhancement during runtime -->
+			              	org.hibernate.proxy,
+			              	javassist.util.proxy,
+			              	*
+						</Import-Package>
+ 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence> <!--IN -->
 						<!-- <Embed-Dependency>scope=compile|runtimeinline=false</Embed-Dependency> -->
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
@@ -84,16 +101,29 @@
 	<!-- Dependencies -->
 
 	<dependencies>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.json</groupId> -->
-<!-- 			<artifactId>json</artifactId> -->
-<!-- 			<version>20140107</version> -->
-<!-- 		</dependency> -->
+
+		<!-- Gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+		<!-- Gson -->
+		
+		<!-- Json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+		<!-- Json -->
+		
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-core</artifactId>
 			<version>3.1.4</version>
 		</dependency>
+		
 		<!--Camel -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -110,12 +140,17 @@
 			<artifactId>camel-spring</artifactId>
 			<version>2.16.2</version>
 		</dependency>
+		<!--Camel -->
+		
+		<!--OSGI -->
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 			<version>4.2.0</version>
 			<type>jar</type>
 		</dependency>
+		<!--OSGI -->
+		
 		<!--Cellar -->
 		<dependency>
 			<groupId>org.apache.karaf.cellar</groupId>
@@ -134,12 +169,15 @@
 			<version>4.0.1</version>
 			<type>jar</type>
 		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<scope>provided</scope>
-			<version>6.0.0</version>
-		</dependency>
+		<!--Cellar -->		
+		
+		<!-- SUBSTITUIDA PELA VERSÃO DO BANCO DE DADOS -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.osgi</groupId> -->
+<!-- 			<artifactId>org.osgi.core</artifactId> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 			<version>6.0.0</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Dependencia parse XML Java -->
 		<!-- <dependency> -->
@@ -148,20 +186,24 @@
 		<!-- <version>1.4.8</version> -->
 		<!-- </dependency> -->
 
-		<!-- Dependencia parse Json Java -->
+		<!-- dependency for the metrics-signar -->
 <!-- 		<dependency> -->
-<!-- 			<groupId>com.googlecode.json-simple</groupId> -->
-<!-- 			<artifactId>json-simple</artifactId> -->
-<!-- 			<version>1.1.1</version> -->
+<!-- 			<groupId>com.github.cb372</groupId> -->
+<!-- 			<artifactId>metrics-sigar</artifactId> -->
+<!-- 			<version>0.2.2</version> -->
+<!-- 		</dependency> -->
+		
+<!-- 		<dependency> -->
+<!--     		<groupId>org.fusesource</groupId> -->
+<!--     		<artifactId>sigar</artifactId> -->
+<!--     		<version>1.6.4</version> -->
 <!-- 		</dependency> -->
 
-		<dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
-        </dependency>
-
-
+<!-- 		<dependency> -->
+<!--     		<groupId>io.kamon</groupId> -->
+<!--     		<artifactId>sigar-loader</artifactId> -->
+<!--     		<version>1.6.6-rev002</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Outras -->
 		<!-- <dependency> -->
@@ -194,7 +236,34 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Outras -->
+		<!-- Dependencias Banco de Dados -->
+		
+		<!-- JPA -->
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+		
+		<dependency>
+      		<groupId>org.osgi</groupId>
+      		<artifactId>org.osgi.core</artifactId>
+      		<version>4.3.1</version>
+    	</dependency>
+		
+		<dependency>
+      		<groupId>org.osgi</groupId>
+      		<artifactId>org.osgi.enterprise</artifactId>
+      		<version>4.2.0</version>
+   		</dependency>
+		
+		<!-- TALVEZ ESSA DEPENDÊNCIA NÃO SEJA NECESSÁRIA -->
+		<dependency>
+     		<groupId>org.apache.karaf.shell</groupId>
+      		<artifactId>org.apache.karaf.shell.console</artifactId>
+      		<version>2.3.0</version>
+    	</dependency>
+		
 	</dependencies>
 
 	<profiles>
