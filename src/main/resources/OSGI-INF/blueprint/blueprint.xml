@@ -71,10 +71,10 @@
 <!-- 		<property name="bundleContext" ref="bundleContext" /> -->
 	</bean>
 	
-	<bean id="service_monitor"
-		class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE"
-		init-method="listNames">
-	</bean>
+<!-- 	<bean id="service_monitor" -->
+<!-- 		class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
+<!-- 		init-method="listNames"> -->
+<!-- 	</bean> -->
 	
 <!-- 	<bean id="service_monitor" class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
 <!-- 		init-method="listNames"> -->
@@ -99,9 +99,9 @@
 			<to uri="bean:device_monitor?method=monitorGateway" />
 		</route>	
 		
-		<route>
-			<from uri="timer://myTimer?period=5000" />
-			<to uri="bean:service_monitor?method=listNames" />
-		</route>		
+<!-- 		<route> -->
+<!-- 			<from uri="timer://myTimer?period=5000" /> -->
+<!-- 			<to uri="bean:service_monitor?method=listNames" /> -->
+<!-- 		</route>		 -->
 	</camelContext>
 </blueprint>
