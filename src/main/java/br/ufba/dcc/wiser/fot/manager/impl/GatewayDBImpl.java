@@ -19,7 +19,7 @@ public class GatewayDBImpl implements GatewayDBService {
 		this.entityManager = entityManager;
 	}
 
-	public void add(Gateway gateway) {
+	public void add(Gateway gateway) throws Exception {
 		entityManager.persist(gateway);
 		entityManager.flush();
 	}
@@ -38,22 +38,21 @@ public class GatewayDBImpl implements GatewayDBService {
 	}
 
 	// Implies only the arrow in the gateway as inactive
-	public void desactive(String ip) {
-		
+	public void desactive(String ip) throws Exception {
 		List<Gateway> listGateway = this.getListGateway();
 		Gateway findGateway = null;
-		
-		for(Gateway gateway : listGateway) {
-			if(gateway.getIp().equals(ip)) {
+		for (Gateway gateway : listGateway) {
+			if (gateway.getIp().equals(ip)) {				
 				findGateway = gateway;
 				break;
 			}
 		}
-		if(findGateway != null) {
+
+		if (findGateway != null) {
 			findGateway.setStatus(false);
-			this.update(findGateway);			
-		}		
-		
+			this.update(findGateway);
+		}
+
 	}
 
 	// Implies only the arrow in the gateway as active

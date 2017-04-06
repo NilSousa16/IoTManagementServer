@@ -89,7 +89,7 @@ public class GatewayMonitor {
 						System.out.println(">>>" + gateway.getMac());
 						System.out.println(">>>" + jsonObject.toString());
 
-						// gatewayDBService.add(gateway);
+						gatewayDBService.add(gateway);
 
 						listGateway.add(m);
 
@@ -124,16 +124,17 @@ public class GatewayMonitor {
 				if (!listNewGateway.isEmpty()) {
 					// clear list main gateway for update
 					// if there are changes the list will be rebooted
-					
+
 					for (Member m : listNewGateway) {
 						String ip = ConverterStringIp.converterStringIp(m.getAddress().toString());
-								
-								//ConverterStringIp.converterStringIp(m.toString());
+
+						// ConverterStringIp.converterStringIp(m.toString());
 						try {
 							if (ip.equals(InfraUtil.getIpMachine())) {
 								continue;
 							}
-							System.out.println(">>>>>>>>>>>>>>>GatewayMonitor.monitorGateway: ENTROU para conectar " + ip);
+							System.out.println(
+									">>>>>>>>>>>>>>>GatewayMonitor.monitorGateway: ENTROU para conectar " + ip);
 							JSONObject jsonObject = json.getInformation(ip, "cxf/gtw/gatewayservice", "gateway/gt");
 
 							ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
@@ -142,7 +143,7 @@ public class GatewayMonitor {
 							// >>>>implementar avaliação caso seja um gateway se
 							// reconectando
 
-							// gatewayDBService.add(gateway);
+							gatewayDBService.update(gateway);
 
 							// update list main gateway
 							listGateway.add(m);
@@ -162,21 +163,23 @@ public class GatewayMonitor {
 
 				if (!listDisconnectedGateway.isEmpty()) {
 					for (Member m : listDisconnectedGateway) {
-						String ip = ConverterStringIp.converterStringIp(m.toString());
+						String ip = ConverterStringIp.converterStringIp(m.getAddress().toString());
 
 						try {
 							if (ip.equals(InfraUtil.getIpMachine())) {
 								continue;
 							}
 							System.out.println(">>>>>>>>>>>>>>>GatewayMonitor.monitorGateway: ENTROU para desconectar");
-							// gatewayDBService.desactive(ip);
+
+							gatewayDBService.desactive(ip);
 
 						} catch (Exception e) {
 							// To modify database routine for log storage
-							log += "Ip: " + InfraUtil.getIpMachine() + " " + InfraUtil.getDateHour() + " " + e + "\n";
+							log += "Ip: " + ip + " " + InfraUtil.getDateHour() + " " + e + "\n";
 							System.out.println("\n" + log + "\n");
 						}
-						
+
+						// >>>>>avaliar posição da instrução
 						listGateway.remove(m);
 					}
 
@@ -194,7 +197,8 @@ public class GatewayMonitor {
 
 			if (!gatewayList.isEmpty()) {
 				for (Gateway list : gatewayList) {
-					System.out.println("Ip [" + list.getIp() + "] Mac [" + list.getMac() + "]");
+					System.out.println(
+							"Ip [" + list.getIp() + "] Mac [" + list.getMac() + "] Status [" + list.isStatus() + "]");
 				}
 			} else {
 				System.out.println("Não há gateways na lista.");
@@ -207,11 +211,11 @@ public class GatewayMonitor {
 		System.out.println("################################\n");
 
 		System.out.println("\n##########GATEWAY REPORT##########");
-		
+
 		for (Member lt : listGateway) {
 			System.out.println(">>>>>>>>>>>>>>> " + lt.toString());
 		}
-		
+
 		System.out.println("################################\n");
 
 	}
