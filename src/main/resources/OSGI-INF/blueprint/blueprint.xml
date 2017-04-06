@@ -96,7 +96,7 @@
 <!-- 		</route> -->
 		
 		<route>
-			<from uri="timer://myTimer?period=10000" />
+			<from uri="timer://myTimer?period=8000" />
 			<to uri="bean:device_monitor?method=monitorGateway" />
 		</route>	
 		
@@ -104,5 +104,11 @@
 <!-- 			<from uri="timer://myTimer?period=5000" /> -->
 <!-- 			<to uri="bean:service_monitor?method=listNames" /> -->
 <!-- 		</route>		 -->
+
+		<route>
+			<from uri="timer://myTimer?period=13000" />
+			<to uri="bean:device_monitor?method=updateDataGateway" />
+		</route>	
+
 	</camelContext>
 </blueprint>

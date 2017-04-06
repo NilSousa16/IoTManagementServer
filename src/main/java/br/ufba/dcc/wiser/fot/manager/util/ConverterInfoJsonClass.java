@@ -19,6 +19,7 @@ public class ConverterInfoJsonClass<T> {
 		Gson gson = new Gson();
 		String typeInfo = classe.getSimpleName();
 		// preciso que o T retorne o gateway.class por exemplo.
+		// solução provisória seria utilizar um condicional
 		@SuppressWarnings("unchecked")
 		T t = (T) gson.fromJson(jsonObject.getJSONObject(typeInfo).toString(), Gateway.class);
 		return t;

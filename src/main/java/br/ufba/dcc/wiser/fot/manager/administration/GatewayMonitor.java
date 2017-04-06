@@ -89,6 +89,7 @@ public class GatewayMonitor {
 						System.out.println(">>>" + gateway.getMac());
 						System.out.println(">>>" + jsonObject.toString());
 
+						// substituir pelo merge
 						gatewayDBService.add(gateway);
 
 						listGateway.add(m);
@@ -140,15 +141,11 @@ public class GatewayMonitor {
 							ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
 							Gateway gateway = converter.getInfo(jsonObject, Gateway.class);
 
-							// >>>>implementar avaliação caso seja um gateway se
-							// reconectando
-
+							// update returns the corrected Status value
 							gatewayDBService.update(gateway);
 
 							// update list main gateway
 							listGateway.add(m);
-
-							System.out.println(">>>Gateway: " + gateway.getMac());
 
 						} catch (Exception e) {
 							// To modify database routine for log storage
@@ -191,14 +188,14 @@ public class GatewayMonitor {
 			System.out.println("Erro no método MonitorGateway.monitorGateway(): " + e.toString());
 		}
 
-		System.out.println("\n##########ROUND REPORT##########");
+		System.out.println("\n##########ROUND REPORT DB##########");
 		try {
 			List<Gateway> gatewayList = gatewayDBService.getListGateway();
 
 			if (!gatewayList.isEmpty()) {
 				for (Gateway list : gatewayList) {
-					System.out.println(
-							"Ip [" + list.getIp() + "] Mac [" + list.getMac() + "] Status [" + list.isStatus() + "]");
+					System.out.println("Ip [" + list.getIp() + "] Mac [" + list.getMac() + "] Status ["
+							+ list.isStatus() + "]" + "] UsedProcessor [" + list.getUsedProcessor() + "]");
 				}
 			} else {
 				System.out.println("Não há gateways na lista.");
@@ -226,21 +223,59 @@ public class GatewayMonitor {
 		try {
 			json = new JsonUtil();
 
-			List<Gateway> gt = gatewayDBService.getListGateway();
+			List<Gateway> listGatewayUpdate = gatewayDBService.getListGateway();
 
-			if (gt != null) {
-				for (Gateway g : gt) {
-					JSONObject jsonObject = json.getInformation(g.getIp(), "cxf/gtw/gatewayservice", "gateway/gt");
+			if (listGatewayUpdate != null) {
+				for (Gateway g : listGatewayUpdate) {
+					try {
 
-					ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
+						if (g.isStatus()) {
+							JSONObject jsonObject = json.getInformation(g.getIp(), "cxf/gtw/gatewayservice",
+									"gateway/gt");
 
-					// >>> implementar possibilidade de erro ao não encontrar
-					// gateway atualizar como desativado
-					Gateway gateway = converter.getInfo(jsonObject, Gateway.class);
+							ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
 
-					System.out.println(">>>" + gateway.getMac());
+							// >>> implementar possibilidade de erro ao não
+							// encontrar
+							// gateway atualizar como desativado
+							// se conectado atualiza tudo senão desconectar
+							Gateway gateway = converter.getInfo(jsonObject, Gateway.class);
+							System.out.println("Gateway a ser atualizado: IP [" + gateway.getIp() + "] Status ["
+									+ gateway.isStatus() + "]");
+
+							gatewayDBService.update(gateway);
+						} else {
+							System.out.println("Gateway não será atualizado: IP [" + g.getIp() + "]" );
+						}
+					} catch (Exception e) {
+						// ConnectException
+						System.out
+								.println("Gateway não existente para atualização. Necessário mudar status. Erro: " + e);
+					}
+
+					// System.out.println(">>>" + gateway.getMac());
 					// gatewayDBService.update(gateway);
 				}
+
+				System.out.println("\n##########UPDATE REPORT DB##########");
+				try {
+					List<Gateway> gatewayList = gatewayDBService.getListGateway();
+
+					if (!gatewayList.isEmpty()) {
+						for (Gateway list : gatewayList) {
+							System.out.println("Ip [" + list.getIp() + "] Mac [" + list.getMac() + "] Status ["
+									+ list.isStatus() + "]" + "] UsedProcessor [" + list.getUsedProcessor() + "]");
+						}
+					} else {
+						System.out.println("Não há gateways na lista.");
+					}
+
+				} catch (Exception e) {
+					System.out.println("Falha na impressão dos gateways.");
+				}
+
+				System.out.println("################################\n");
+
 			}
 		} catch (Exception e) {
 			// To modify database routine for log storage
