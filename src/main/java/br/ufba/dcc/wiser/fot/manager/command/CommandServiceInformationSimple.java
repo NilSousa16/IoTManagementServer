@@ -1,17 +1,21 @@
-package br.ufba.dcc.wiser.fot.manager.administration;
+package br.ufba.dcc.wiser.fot.manager.command;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.felix.gogo.commands.Action;
+import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.service.command.CommandSession;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-public class ServiceInfoTESTE {
+@Command(scope = "ws", name = "serviceInformationSimple")
+public class CommandServiceInformationSimple implements Action{
 
 	BundleContext bundleContext = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
 
@@ -19,6 +23,11 @@ public class ServiceInfoTESTE {
 		this.bundleContext = bundleContext;
 	}
 
+	public Object execute(CommandSession session) throws Exception {
+		this.listNames();
+		return null;
+	}
+	
 	public void listNames() {
 		System.out.println(">>>>>>>BundleContext: " + bundleContext != null);
 		Map<String, Integer> serviceNames = getServiceNamesMap(bundleContext);

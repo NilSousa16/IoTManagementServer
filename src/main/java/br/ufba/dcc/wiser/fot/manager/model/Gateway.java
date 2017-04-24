@@ -1,8 +1,13 @@
 package br.ufba.dcc.wiser.fot.manager.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Gateway {
@@ -29,8 +34,12 @@ public class Gateway {
 	private String ip; // returns the ip address
 	private String hostName; // returns the hostname
 	private String location; // returns the fake location
-	// private List<Service> service = new ArrayList<Service>(); // returns the
-	// list of services
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "gateway_has_bundle", joinColumns = { @JoinColumn(name = "gateway_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "bundler_id") })
+	private List<Bundler> listBundler;
+	private List<Service> listService;
 	// private String[] intefaceNetwork; //returns a list with the existing
 	// network interfaces
 
@@ -178,13 +187,21 @@ public class Gateway {
 		this.location = location;
 	}
 
-	// public List<Service> getService() {
-	// return service;
-	// }
-	//
-	// public void setService(List<Service> service) {
-	// this.service = service;
-	// }
+	public List<Bundler> getListBundler() {
+		return listBundler;
+	}
+
+	public void setListBundler(List<Bundler> listBundler) {
+		this.listBundler = listBundler;
+	}
+
+	public List<Service> getListService() {
+		return listService;
+	}
+
+	public void setListService(List<Service> listService) {
+		this.listService = listService;
+	}
 
 	// public String[] getIntefaceNetwork() {
 	// return intefaceNetwork;

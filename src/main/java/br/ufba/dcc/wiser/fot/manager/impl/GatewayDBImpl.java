@@ -19,7 +19,7 @@ public class GatewayDBImpl implements GatewayDBService {
 		this.entityManager = entityManager;
 	}
 
-	public void add(Gateway gateway) throws Exception {
+	public void add(Gateway gateway) throws Exception {		
 		entityManager.persist(gateway);
 		entityManager.flush();
 	}
@@ -50,6 +50,7 @@ public class GatewayDBImpl implements GatewayDBService {
 
 		if (findGateway != null) {
 			findGateway.setStatus(false);
+			//implementar desativação dos serviços na tabela m:m com campo de situação do gateway = desativado/ativado
 			this.update(findGateway);
 		}
 

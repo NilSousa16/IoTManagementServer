@@ -9,7 +9,7 @@ import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
 //criar comando para listar status dos gateways existentes
 //@Command(scope = "fm", name = "informationFull")
-public class GatewayInformationFull {
+public class CommandGatewayInformationFull {
 
 	private GatewayDBService gatewayDBService = null;
 

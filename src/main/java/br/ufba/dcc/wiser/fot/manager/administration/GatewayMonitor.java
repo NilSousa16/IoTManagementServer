@@ -12,7 +12,9 @@ import com.hazelcast.core.Cluster;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.Member;
 
+import br.ufba.dcc.wiser.fot.manager.model.Bundler;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
+import br.ufba.dcc.wiser.fot.manager.service.BundlerDBService;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 import br.ufba.dcc.wiser.fot.manager.util.ConverterInfoJsonClass;
 import br.ufba.dcc.wiser.fot.manager.util.ConverterStringIp;
@@ -32,6 +34,8 @@ public class GatewayMonitor {
 
 	private GatewayDBService gatewayDBService = null;
 
+	private BundlerDBService bundlerDBService = null;
+
 	private JsonUtil json = new JsonUtil();
 
 	// Simulates a log
@@ -45,6 +49,11 @@ public class GatewayMonitor {
 	// Used by blueprint
 	public void setGatewayDBService(GatewayDBService gatewayDBService) {
 		this.gatewayDBService = gatewayDBService;
+	}
+
+	// Used by blueprint
+	public void setBundlerDBService(BundlerDBService bundlerDBService) {
+		this.bundlerDBService = bundlerDBService;
 	}
 
 	// Responsible for updating gateway information, adding new gateway, etc
@@ -88,6 +97,12 @@ public class GatewayMonitor {
 
 						System.out.println(">>>" + gateway.getMac());
 						System.out.println(">>>" + jsonObject.toString());
+
+						for (Bundler bundler : gateway.getListBundler()) {
+							if (bundlerDBService.find(bundler.getName()) == null) {
+								bundlerDBService.add(bundler);
+							}
+						}
 
 						// substituir pelo merge
 						gatewayDBService.add(gateway);
@@ -140,6 +155,12 @@ public class GatewayMonitor {
 
 							ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
 							Gateway gateway = converter.getInfo(jsonObject, Gateway.class);
+
+							for (Bundler bundler : gateway.getListBundler()) {
+								if (bundlerDBService.find(bundler.getName()) == null) {
+									bundlerDBService.add(bundler);
+								}
+							}
 
 							// update returns the corrected Status value
 							gatewayDBService.update(gateway);
@@ -228,7 +249,6 @@ public class GatewayMonitor {
 			if (listGatewayUpdate != null) {
 				for (Gateway g : listGatewayUpdate) {
 					try {
-
 						if (g.isStatus()) {
 							JSONObject jsonObject = json.getInformation(g.getIp(), "cxf/gtw/gatewayservice",
 									"gateway/gt");
@@ -243,9 +263,15 @@ public class GatewayMonitor {
 							System.out.println("Gateway a ser atualizado: IP [" + gateway.getIp() + "] Status ["
 									+ gateway.isStatus() + "]");
 
+							for (Bundler bundler : gateway.getListBundler()) {
+								if (bundlerDBService.find(bundler.getName()) == null) {
+									bundlerDBService.add(bundler);
+								}
+							}
+
 							gatewayDBService.update(gateway);
 						} else {
-							System.out.println("Gateway não será atualizado: IP [" + g.getIp() + "]" );
+							System.out.println("Gateway não será atualizado: IP [" + g.getIp() + "]");
 						}
 					} catch (Exception e) {
 						// ConnectException
@@ -278,6 +304,82 @@ public class GatewayMonitor {
 
 			}
 		} catch (Exception e) {
+			// To modify database routine for log storage
+			log += "Ip: " + InfraUtil.getIpMachine() + " " + InfraUtil.getDateHour() + " " + e + "\n";
+			System.out.println("\n" + log + "\n");
+		}
+	}
+
+	// Updates bundle information for all active gateways - Refresh every 50
+	// seconds
+	// Configure in blueprint
+	public void updateDataBundles() {
+		try {
+
+			json = new JsonUtil();
+
+			List<Gateway> listGatewayUpdateBundle = gatewayDBService.getListGateway();
+
+			if (listGatewayUpdateBundle != null) {
+				for (Gateway g : listGatewayUpdateBundle) {
+					if (g.isStatus()) {
+						JSONObject jsonObject = json.getInformation(g.getIp(), "cxf/gtw/gatewayservice", "gateway/gt");
+
+						ConverterInfoJsonClass<Gateway> converter = new ConverterInfoJsonClass<Gateway>();
+
+						Gateway gateway = converter.getInfo(jsonObject, Gateway.class);
+
+						// para atualizar será necessário
+						// descobrir novos bundles
+						// descobrir bundles desconectados
+						// descobrir bundles parados para atualizar seu status
+						// no sistema
+
+						List<Bundler> listBundlesDB = g.getListBundler();
+
+						List<Bundler> listBundleSystem = gateway.getListBundler();
+
+						List<Bundler> listNewBundles = listBundleSystem;
+
+						List<Bundler> listUninstallBundles = listBundlesDB;
+
+						// returns uninstalled bundles
+						listUninstallBundles.removeAll(listBundleSystem);
+
+						// return new bundles
+						listNewBundles.removeAll(listBundlesDB);
+
+						// remove bundles in the gateway
+						if (!listUninstallBundles.isEmpty()) {
+							g.getListBundler().removeAll(listUninstallBundles);
+							
+							System.out.println(">>>>>Lista de Bundles removido bundles.");
+						}
+
+						// add new bundles in the gateway
+						if (!listNewBundles.isEmpty()) {
+							for (Bundler bundler : listNewBundles) {
+								if (bundlerDBService.find(bundler.getName()) == null) {
+									bundlerDBService.add(bundler);
+								}
+							}
+
+							g.getListBundler().addAll(listNewBundles);
+							
+							System.out.println(">>>>>Lista de Bundles adicionado bundles.");
+						}
+						
+						gatewayDBService.update(g);
+
+						System.out.println(">>>>>Lista de Bundles Verificada.");
+						
+					}
+
+				}
+			}
+		} catch (
+
+		Exception e) {
 			// To modify database routine for log storage
 			log += "Ip: " + InfraUtil.getIpMachine() + " " + InfraUtil.getDateHour() + " " + e + "\n";
 			System.out.println("\n" + log + "\n");

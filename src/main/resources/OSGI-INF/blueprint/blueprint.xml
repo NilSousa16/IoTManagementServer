@@ -9,9 +9,9 @@
 	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
 	OF ANY KIND, either express or implied. See the License for the specific 
 	language governing permissions and limitations under the License. -->
-<blueprint  default-activation="eager"
-	xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.2.0"
+<blueprint default-activation="eager"
+	xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.2.0"
 	xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0"
 	xmlns:jaxws="http://cxf.apache.org/blueprint/jaxws" xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
 	xmlns:cxf="http://cxf.apache.org/blueprint/core" xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0"
@@ -23,6 +23,8 @@
  http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
  http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>INSTANCES<<<<<<<<<<<<<<<<<<<<<<<< -->
+
 	<reference id="hazelcastInstance" interface="com.hazelcast.core.HazelcastInstance">
 	</reference>
 
@@ -31,84 +33,109 @@
 
 	<reference id="groupManager" interface="org.apache.karaf.cellar.core.GroupManager">
 	</reference>
+
+	<!-- <reference id="bundleContext" interface="org.osgi.framework.BundleContext"> -->
+	<!-- </reference> -->
+
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>INTERFACES<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+	<service ref="gatewayService"
+		interface="br.ufba.dcc.wiser.fot.manager.service.GatewayDBService" />
+		
+	<service ref="bundlerService"
+		interface="br.ufba.dcc.wiser.fot.manager.service.BundlerDBService" />
+
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>BEANS<<<<<<<<<<<<<<<<<<<<<<<< -->
 	
-<!-- 	<reference id="bundleContext" interface="org.osgi.framework.BundleContext"> -->
-<!-- 	</reference> -->
-
-	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>Área de Teste<<<<<<<<<<<<<<<<<<<<<<<< -->
-
 	<bean id="gatewayService" class="br.ufba.dcc.wiser.fot.manager.impl.GatewayDBImpl">
 		<jpa:context unitname="person" property="entityManager" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
+	
+	<bean id="bundlerService" class="br.ufba.dcc.wiser.fot.manager.impl.BundlerDBImpl">
+		<jpa:context unitname="person" property="entityManager" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
 
-	<service ref="gatewayService"
-		interface="br.ufba.dcc.wiser.fot.manager.service.GatewayDBService" />
+	<bean id="gateway_monitor"
+		class="br.ufba.dcc.wiser.fot.manager.administration.GatewayMonitor"
+		init-method="monitorGateway">
+		<property name="bundlerDBService" ref="bundlerService" />
+		<property name="gatewayDBService" ref="gatewayService" />
+		<property name="instance" ref="hazelcastInstance" />
+	</bean>
+	
+	<!-- <bean id="service_monitor" class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
+	<!-- init-method="listNames"> -->
+	<!-- <property name="bundleContext" ref="bundleContext" /> -->
+	<!-- </bean> -->
+
+	<!-- <bean id="monitor_address" -->
+	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.MonitorAddress" -->
+	<!-- init-method="monitorAddress"> -->
+	<!-- <property name="instance" ref="hazelcastInstance" /> -->
+	<!-- </bean> -->
+
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMANDS<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 	<command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
-<!-- 		<command> -->
-<!-- 			<action -->
-<!-- 				class="br.ufba.dcc.wiser.fot.manager.command.GatewayInformationFull"> -->
-<!-- 				<property name="gatewayDBService" ref="gatewayService" /> -->
-<!-- 			</action> -->
-<!-- 		</command> -->
+		<!-- <command> -->
+		<!-- <action -->
+		<!-- class="br.ufba.dcc.wiser.fot.manager.command.GatewayInformationFull"> -->
+		<!-- <property name="gatewayDBService" ref="gatewayService" /> -->
+		<!-- </action> -->
+		<!-- </command> -->
 
 		<command>
 			<action
-				class="br.ufba.dcc.wiser.fot.manager.command.GatewayInformationSimple">
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayInformationSimple">
 				<property name="gatewayDBService" ref="gatewayService" />
 			</action>
 		</command>
+
+		<command>
+			<action
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandServiceInformationSimple">
+			</action>
+		</command>
+		
+		<command>
+			<action
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayBundleInformation">
+				<property name="gatewayDBService" ref="gatewayService" />
+			</action>
+		</command>
+
 	</command-bundle>
 
-
-	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>Área de Teste<<<<<<<<<<<<<<<<<<<<<<<< -->
-
-	<bean id="device_monitor"
-		class="br.ufba.dcc.wiser.fot.manager.administration.GatewayMonitor"
-		init-method="monitorGateway">
-		<property name="gatewayDBService" ref="gatewayService" />
-		<property name="instance" ref="hazelcastInstance" />
-<!-- 		<property name="bundleContext" ref="bundleContext" /> -->
-	</bean>
-	
-<!-- 	<bean id="service_monitor" -->
-<!-- 		class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
-<!-- 		init-method="listNames"> -->
-<!-- 	</bean> -->
-	
-<!-- 	<bean id="service_monitor" class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
-<!-- 		init-method="listNames"> -->
-<!-- 		<property name="bundleContext" ref="bundleContext" />	 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="monitor_address" -->
-<!-- 		class="br.ufba.dcc.wiser.fot.manager.administration.MonitorAddress" -->
-<!-- 		init-method="monitorAddress"> -->
-<!-- 		<property name="instance" ref="hazelcastInstance" /> -->
-<!-- 	</bean> -->
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>ROUTECAMEL<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
-<!-- 		<route> -->
-<!-- 			<from uri="timer://myTimer?period=5000" /> -->
-<!-- 			<to uri="bean:monitor_address?method=monitorAddress" /> -->
-<!-- 		</route> -->
-		
-		<route>
-			<from uri="timer://myTimer?period=8000" />
-			<to uri="bean:device_monitor?method=monitorGateway" />
-		</route>	
-		
-<!-- 		<route> -->
-<!-- 			<from uri="timer://myTimer?period=5000" /> -->
-<!-- 			<to uri="bean:service_monitor?method=listNames" /> -->
-<!-- 		</route>		 -->
+		<!-- <route> -->
+		<!-- <from uri="timer://myTimer?period=5000" /> -->
+		<!-- <to uri="bean:monitor_address?method=monitorAddress" /> -->
+		<!-- </route> -->
 
 		<route>
-			<from uri="timer://myTimer?period=13000" />
-			<to uri="bean:device_monitor?method=updateDataGateway" />
-		</route>	
+			<from uri="timer://myTimer?period=8000" />
+			<to uri="bean:gateway_monitor?method=monitorGateway" />
+		</route>
+		
+		<route>
+			<from uri="timer://myTimer?period=15000" />
+			<to uri="bean:gateway_monitor?method=updateDataBundles" />
+		</route>
+
+		<!-- <route> -->
+		<!-- <from uri="timer://myTimer?period=5000" /> -->
+		<!-- <to uri="bean:service_monitor?method=listNames" /> -->
+		<!-- </route> -->
+
+		<!-- <route> -->
+		<!-- <from uri="timer://myTimer?period=13000" /> -->
+		<!-- <to uri="bean:gateway_monitor?method=updateDataGateway" /> -->
+		<!-- </route> -->
 
 	</camelContext>
 </blueprint>
