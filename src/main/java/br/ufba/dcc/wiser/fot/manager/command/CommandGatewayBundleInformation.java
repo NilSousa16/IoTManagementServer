@@ -6,7 +6,6 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 
-import br.ufba.dcc.wiser.fot.manager.model.Bundler;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
@@ -26,14 +25,14 @@ public class CommandGatewayBundleInformation implements Action {
 		for (Gateway gateway : gateways) {
 			if (gateway.isStatus()) {
 
-				List<Bundler> list = gateway.getListBundler();
+				//List<Bundler> list = gateway.getListBundler();
 
 				System.out.println("\n>>>>>> GatewayIP: " + gateway.getIp());
 
-				for (Bundler bundle : list) {
-					System.out.println(" - Name: " + bundle.getName() + " Version: " + bundle.getVersion()
-							+ " Location: " + bundle.getLocation());
-				}
+				//for (Bundler bundle : list) {
+				//	System.out.println(" - Name: " + bundle.getName() + " Version: " + bundle.getVersion()
+				//			+ " Location: " + bundle.getLocation());
+				//}
 			}
 		}
 		System.out.println("#####################################\n");

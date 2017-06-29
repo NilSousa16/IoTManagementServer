@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <beans xmlns="http://www.springframework.org/schema/beans" -->
+<!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
+<!-- xmlns:jaxws="http://cxf.apache.org/jaxws" -->
+<!-- xmlns:jaxrs="http://cxf.apache.org/jaxrs" -->
+<!-- xsi:schemaLocation=" -->
+<!-- http://www.springframework.org/schema/beans -->
+<!-- http://www.springframework.org/schema/beans/spring-beans.xsd -->
+<!-- http://cxf.apache.org/jaxrs -->
+<!-- http://cxf.apache.org/schemas/jaxrs.xsd -->
+<!-- http://cxf.apache.org/jaxws -->
+<!-- http://cxf.apache.org/schemas/jaxws.xsd"> -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://cxf.apache.org/jaxrs 
+		http://cxf.apache.org/schemas/jaxrs.xsd
+		http://cxf.apache.org/jaxws
+		http://cxf.apache.org/schemas/jaxws.xsd
+		http://www.springframework.org/schema/osgi 
+		http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+
+	<!-- <import resource="classpath:META-INF/cxf/cxf.xml" /> -->
+	<!-- <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" /> -->
+	<!-- <import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> -->
+
+	<!-- <jaxws:endpoint id="bookShelfService" -->
+	<!-- implementor="com.aranin.weblog4j.services.BookShelfServiceImpl" -->
+	<!-- address="/bookshelfservice" /> -->
+
+	<bean id="bookserviceclass" class="br.ufba.dcc.wiser.fot.manager.test.BookService" />
+
+	<jaxrs:server id="bookservice" address="/bookservice">
+		<jaxrs:serviceBeans>
+			<ref bean="bookserviceclass" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+
+	<bean id="information_bundler" class="br.ufba.dcc.wiser.fot.manager.administration.InformationBundler" />
+
+	<jaxrs:server id="information_bundler_method" address="/informationbundler">
+		<jaxrs:serviceBeans>
+			<ref bean="information_bundler" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+	
+	<bean id="information_gateway" class="br.ufba.dcc.wiser.fot.manager.administration.InformationGateway" />
+
+	<jaxrs:server id="information_gateway_method" address="/informationgateway">
+		<jaxrs:serviceBeans>
+			<ref bean="information_gateway" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+	
+	<bean id="information_gateway_status" class="br.ufba.dcc.wiser.fot.manager.administration.InformationGatewayStatus" />
+
+	<jaxrs:server id="information_gateway_status_method" address="/informationgatewaystatus">
+		<jaxrs:serviceBeans>
+			<ref bean="information_gateway_status" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+	
+	<bean id="information_service" class="br.ufba.dcc.wiser.fot.manager.administration.InformationService" />
+
+	<jaxrs:server id="information_service_method" address="/informationservice">
+		<jaxrs:serviceBeans>
+			<ref bean="information_service" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+
+</beans>

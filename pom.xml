@@ -14,6 +14,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jersey.version>1.19</jersey.version>
 	</properties>
 
 	<!-- Build specifications -->
@@ -30,24 +31,27 @@
 					<instructions>
 						<Bundle-Activator>br.ufba.dcc.wiser.fot.manager.administration.Activator</Bundle-Activator>
 						<Export-Package>
-<!-- 							br.ufba.dcc.wiser.fot.manager, -->
-<!-- 							org.hibernate.osgitest, IN -->
-<!--               				org.hibernate.osgitest.entity IN				 -->
+							<!-- br.ufba.dcc.wiser.fot.manager, -->
+							<!-- org.hibernate.osgitest, IN -->
+							<!-- org.hibernate.osgitest.entity IN -->
 						</Export-Package>
 						<Import-Package> <!--IN -->
 							org.hibernate.jpa,
-             		 		org.apache.felix.service.command,
-              				org.apache.felix.gogo.commands,
-              				org.apache.karaf.shell.console,
-              				org.apache.karaf.shell.commands,
-			              	javax.persistence;version="[1.0.0,2.1.0]",
-			              	<!-- Needed for proxying's Javassist enhancement during runtime -->
-			              	org.hibernate.proxy,
-			              	javassist.util.proxy,
-			              	*
+							org.apache.felix.service.command,
+							org.apache.felix.gogo.commands,
+							org.apache.karaf.shell.console,
+							org.apache.karaf.shell.commands,
+							javax.persistence;version="[1.0.0,2.1.0]",
+							<!-- Needed for proxying's Javassist enhancement during runtime -->
+							org.hibernate.proxy,
+							javassist.util.proxy,
+							*
 						</Import-Package>
- 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence> <!--IN -->
-						<!-- <Embed-Dependency>scope=compile|runtimeinline=false</Embed-Dependency> -->
+						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence> <!--IN -->
+						<!-- SE DER RUIM PO TIRAR  -->
+						<Embed-Dependency>scope=compile|runtime</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<!-- FIM DO QUE PODE DAR RUIM -->
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
 						<!-- <Embed-Transitive>true</Embed-Transitive> <Import-Package>*</Import-Package> -->
@@ -102,14 +106,22 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+
 		<!-- Gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.0</version>
+			<scope>compile</scope>
 		</dependency>
 		<!-- Gson -->
-		
+
 		<!-- Json -->
 		<dependency>
 			<groupId>org.json</groupId>
@@ -117,13 +129,17 @@
 			<version>20140107</version>
 		</dependency>
 		<!-- Json -->
-		
+
+		<!-- CXF -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-core</artifactId>
 			<version>3.1.4</version>
 		</dependency>
-		
+
+
+		<!-- CXF -->
+
 		<!--Camel -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -141,7 +157,7 @@
 			<version>2.16.2</version>
 		</dependency>
 		<!--Camel -->
-		
+
 		<!--OSGI -->
 		<dependency>
 			<groupId>org.osgi</groupId>
@@ -150,7 +166,7 @@
 			<type>jar</type>
 		</dependency>
 		<!--OSGI -->
-		
+
 		<!--Cellar -->
 		<dependency>
 			<groupId>org.apache.karaf.cellar</groupId>
@@ -169,15 +185,15 @@
 			<version>4.0.1</version>
 			<type>jar</type>
 		</dependency>
-		<!--Cellar -->		
-		
+		<!--Cellar -->
+
 		<!-- SUBSTITUIDA PELA VERSÃO DO BANCO DE DADOS -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.osgi</groupId> -->
-<!-- 			<artifactId>org.osgi.core</artifactId> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 			<version>6.0.0</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.osgi</groupId> -->
+		<!-- <artifactId>org.osgi.core</artifactId> -->
+		<!-- <scope>provided</scope> -->
+		<!-- <version>6.0.0</version> -->
+		<!-- </dependency> -->
 
 		<!-- Dependencia parse XML Java -->
 		<!-- <dependency> -->
@@ -187,23 +203,23 @@
 		<!-- </dependency> -->
 
 		<!-- dependency for the metrics-signar -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.github.cb372</groupId> -->
-<!-- 			<artifactId>metrics-sigar</artifactId> -->
-<!-- 			<version>0.2.2</version> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!--     		<groupId>org.fusesource</groupId> -->
-<!--     		<artifactId>sigar</artifactId> -->
-<!--     		<version>1.6.4</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.github.cb372</groupId> -->
+		<!-- <artifactId>metrics-sigar</artifactId> -->
+		<!-- <version>0.2.2</version> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!--     		<groupId>io.kamon</groupId> -->
-<!--     		<artifactId>sigar-loader</artifactId> -->
-<!--     		<version>1.6.6-rev002</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.fusesource</groupId> -->
+		<!-- <artifactId>sigar</artifactId> -->
+		<!-- <version>1.6.4</version> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>io.kamon</groupId> -->
+		<!-- <artifactId>sigar-loader</artifactId> -->
+		<!-- <version>1.6.6-rev002</version> -->
+		<!-- </dependency> -->
 
 		<!-- Outras -->
 		<!-- <dependency> -->
@@ -237,33 +253,74 @@
 		</dependency>
 
 		<!-- Dependencias Banco de Dados -->
-		
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
 		</dependency>
-		
+
 		<dependency>
-      		<groupId>org.osgi</groupId>
-      		<artifactId>org.osgi.core</artifactId>
-      		<version>4.3.1</version>
-    	</dependency>
-		
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.3.1</version>
+		</dependency>
+
 		<dependency>
-      		<groupId>org.osgi</groupId>
-      		<artifactId>org.osgi.enterprise</artifactId>
-      		<version>4.2.0</version>
-   		</dependency>
-		
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.enterprise</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-annotations -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+			<version>3.5.6-Final</version>
+		</dependency>
+
+
 		<!-- TALVEZ ESSA DEPENDÊNCIA NÃO SEJA NECESSÁRIA -->
 		<dependency>
-     		<groupId>org.apache.karaf.shell</groupId>
-      		<artifactId>org.apache.karaf.shell.console</artifactId>
-      		<version>2.3.0</version>
-    	</dependency>
-		
+			<groupId>org.apache.karaf.shell</groupId>
+			<artifactId>org.apache.karaf.shell.console</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<!-- Dependency jersey -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.sun.jersey</groupId> -->
+		<!-- <artifactId>jersey-servlet</artifactId> -->
+		<!-- <version>${jersey.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.sun.jersey</groupId> -->
+		<!-- <artifactId>jersey-json</artifactId> -->
+		<!-- <version>${jersey.version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.sun.jersey</groupId> -->
+		<!-- <artifactId>jersey-client</artifactId> -->
+		<!-- <version>${jersey.version}</version> -->
+		<!-- </dependency> -->
+
+
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>

@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "bundler")
-public class Bundler implements Serializable {
+@Table(name = "actuador")
+public class Actuador implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,8 +18,9 @@ public class Bundler implements Serializable {
 	private long id;
 
 	private String name;
-	private String location;
+	private String manufacturer;
 	private String version;
+	private String action;
 
 	public long getId() {
 		return id;
@@ -37,12 +38,12 @@ public class Bundler implements Serializable {
 		this.name = name;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getManufacturer() {
+		return manufacturer;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 
 	public String getVersion() {
@@ -53,12 +54,21 @@ public class Bundler implements Serializable {
 		this.version = version;
 	}
 
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((action == null) ? 0 : action.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
@@ -72,13 +82,18 @@ public class Bundler implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Bundler other = (Bundler) obj;
+		Actuador other = (Actuador) obj;
+		if (action == null) {
+			if (other.action != null)
+				return false;
+		} else if (!action.equals(other.action))
+			return false;
 		if (id != other.id)
 			return false;
-		if (location == null) {
-			if (other.location != null)
+		if (manufacturer == null) {
+			if (other.manufacturer != null)
 				return false;
-		} else if (!location.equals(other.location))
+		} else if (!manufacturer.equals(other.manufacturer))
 			return false;
 		if (name == null) {
 			if (other.name != null)

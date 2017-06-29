@@ -15,8 +15,6 @@ public class JsonUtil {
 			throws JSONException, Exception, MalformedURLException, IOException {
 
 		URL url = new URL("http://" + ip + ":8181/" + domain + "/" + path);
-		// URL url = new URL("http://" + ip +
-		// ":8181/cxf/gtw/gatewayservice/gateway/gt");
 		System.out.println(">>>>>>>>>>>>>>>>> Entrou em JSON Input Stream");
 
 		InputStream in = url.openStream();

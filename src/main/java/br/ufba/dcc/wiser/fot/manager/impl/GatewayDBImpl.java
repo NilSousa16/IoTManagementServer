@@ -24,7 +24,7 @@ public class GatewayDBImpl implements GatewayDBService {
 		entityManager.flush();
 	}
 
-	// Updates all gateway information
+	// updates all gateway information
 	public void update(Gateway gateway) {
 		entityManager.merge(gateway);
 	}
@@ -37,7 +37,7 @@ public class GatewayDBImpl implements GatewayDBService {
 		return null;
 	}
 
-	// Implies only the arrow in the gateway as inactive
+	// implies only the arrow in the gateway as inactive
 	public void desactive(String ip) throws Exception {
 		List<Gateway> listGateway = this.getListGateway();
 		Gateway findGateway = null;
@@ -51,12 +51,14 @@ public class GatewayDBImpl implements GatewayDBService {
 		if (findGateway != null) {
 			findGateway.setStatus(false);
 			//implementar desativação dos serviços na tabela m:m com campo de situação do gateway = desativado/ativado
+			//talvez não seja necessário pois a situação dos serviços era ativo antes da interrupção do gateway
 			this.update(findGateway);
 		}
 
 	}
 
-	// Implies only the arrow in the gateway as active
+	// implies only the arrow in the gateway as active
+	//no momento a função desse método está sendo implementada pelo update. Talvez ele possa ser exluido.
 	public void active(Gateway gateway) {
 		gateway.setStatus(true);
 		this.update(gateway);

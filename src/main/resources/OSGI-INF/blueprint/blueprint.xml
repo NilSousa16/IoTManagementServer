@@ -57,10 +57,17 @@
 		<tx:transaction method="*" value="Required" />
 	</bean>
 
-	<bean id="gateway_monitor"
-		class="br.ufba.dcc.wiser.fot.manager.administration.GatewayMonitor"
-		init-method="monitorGateway">
-		<property name="bundlerDBService" ref="bundlerService" />
+<!-- 	<bean id="gateway_monitor" -->
+<!-- 		class="br.ufba.dcc.wiser.fot.manager.administration.GatewayMonitor" -->
+<!-- 		init-method="monitorGateway"> -->
+<!-- 		<property name="bundlerDBService" ref="bundlerService" /> -->
+<!-- 		<property name="gatewayDBService" ref="gatewayService" /> -->
+<!-- 		<property name="instance" ref="hazelcastInstance" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="discovery_gateway"
+		class="br.ufba.dcc.wiser.fot.manager.administration.DiscoveryGateway"
+		init-method="discovery">
 		<property name="gatewayDBService" ref="gatewayService" />
 		<property name="instance" ref="hazelcastInstance" />
 	</bean>
@@ -68,12 +75,6 @@
 	<!-- <bean id="service_monitor" class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
 	<!-- init-method="listNames"> -->
 	<!-- <property name="bundleContext" ref="bundleContext" /> -->
-	<!-- </bean> -->
-
-	<!-- <bean id="monitor_address" -->
-	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.MonitorAddress" -->
-	<!-- init-method="monitorAddress"> -->
-	<!-- <property name="instance" ref="hazelcastInstance" /> -->
 	<!-- </bean> -->
 
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMANDS<<<<<<<<<<<<<<<<<<<<<<<< -->
@@ -112,20 +113,16 @@
 
 	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
-		<!-- <route> -->
-		<!-- <from uri="timer://myTimer?period=5000" /> -->
-		<!-- <to uri="bean:monitor_address?method=monitorAddress" /> -->
-		<!-- </route> -->
 
-		<route>
-			<from uri="timer://myTimer?period=8000" />
-			<to uri="bean:gateway_monitor?method=monitorGateway" />
-		</route>
+<!-- 		<route> final-->
+<!-- 			<from uri="timer://myTimer?period=8000" /> -->
+<!-- 			<to uri="bean:discovery_gateway?method=discovery" /> -->
+<!-- 		</route> -->
 		
-		<route>
-			<from uri="timer://myTimer?period=15000" />
-			<to uri="bean:gateway_monitor?method=updateDataBundles" />
-		</route>
+<!-- 		<route> -->
+<!-- 			<from uri="timer://myTimer?period=15000" /> -->
+<!-- 			<to uri="bean:gateway_monitor?method=monitorGateway" /> -->
+<!-- 		</route> -->
 
 		<!-- <route> -->
 		<!-- <from uri="timer://myTimer?period=5000" /> -->

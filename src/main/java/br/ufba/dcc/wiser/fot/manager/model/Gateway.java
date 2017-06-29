@@ -1,47 +1,55 @@
 package br.ufba.dcc.wiser.fot.manager.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
 
 @Entity
-public class Gateway {
+@Table(name = "gateway")
+public class Gateway implements Serializable {
 
-	private String description; // description of OS in use
-	private String model; // to be defined
-	private String manufacturer; // to be defined
-	private String firmware; // to be defined
-	private boolean status; // on-off used server side opportunistically
-	private long storage; // returns the list of components in existing stores
-	private String lastUpdate; // Method for the server side, but the client can
-								// register its actualization if possible
-	private int baterryLevel; // returns the battery level in percent
-	private long totalMemory; // returns the total of memory
-	private long usedMemory; // returns the total of used memory
-	private long freeMemory; // returns the total of free memory
-	private double usedProcessor; // returns the percentage value of the
-									// processor's capacity used
-	private double freeProcessor; // returns the percentage value of the free
-									// processor capacity
-	// private List<CPU> cpu; // returns information about CPU characteristics
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	private String mac; // returns the mac address
-	private String ip; // returns the ip address
-	private String hostName; // returns the hostname
-	private String location; // returns the fake location
+	private String mac;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "gateway_has_bundle", joinColumns = { @JoinColumn(name = "gateway_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "bundler_id") })
-	private List<Bundler> listBundler;
-	private List<Service> listService;
-	// private String[] intefaceNetwork; //returns a list with the existing
-	// network interfaces
+	private String description;
+	private String model;
+	private String manufacturer;
+	private String firmware;
+	private boolean status;
+	private long storage;
+	private String lastUpdate;
+	private String ip;
+	private String hostName;
+
+	@ManyToOne
+	private Location location;
+
+	@OneToMany(mappedBy = "gateway", fetch = FetchType.LAZY)
+	private List<GatewayStatus> gatewayStatus;
+
+	@OneToMany(mappedBy = "id.gateway", fetch = FetchType.LAZY)
+	private List<BundlerInstalled> bundlerInstalled;
+
+	// private String[] intefaceNetwork;
+
+	public String getMac() {
+		return mac;
+	}
+
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
 
 	public String getDescription() {
 		return description;
@@ -99,70 +107,6 @@ public class Gateway {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public int getBaterryLevel() {
-		return baterryLevel;
-	}
-
-	public void setBaterryLevel(int baterryLevel) {
-		this.baterryLevel = baterryLevel;
-	}
-
-	public long getTotalMemory() {
-		return totalMemory;
-	}
-
-	public void setTotalMemory(long totalMemory) {
-		this.totalMemory = totalMemory;
-	}
-
-	public long getUsedMemory() {
-		return usedMemory;
-	}
-
-	public void setUsedMemory(long usedMemory) {
-		this.usedMemory = usedMemory;
-	}
-
-	public long getFreeMemory() {
-		return freeMemory;
-	}
-
-	public void setFreeMemory(long freeMemory) {
-		this.freeMemory = freeMemory;
-	}
-
-	public double getUsedProcessor() {
-		return usedProcessor;
-	}
-
-	public void setUsedProcessor(double usedProcessor) {
-		this.usedProcessor = usedProcessor;
-	}
-
-	public double getFreeProcessor() {
-		return freeProcessor;
-	}
-
-	public void setFreeProcessor(double freeProcessor) {
-		this.freeProcessor = freeProcessor;
-	}
-
-	// public List<CPU> getCpu() {
-	// return cpu;
-	// }
-	//
-	// public void setCpu(List<CPU> cpu) {
-	// this.cpu = cpu;
-	// }
-
-	public String getMac() {
-		return mac;
-	}
-
-	public void setMac(String mac) {
-		this.mac = mac;
-	}
-
 	public String getIp() {
 		return ip;
 	}
@@ -179,35 +123,119 @@ public class Gateway {
 		this.hostName = hostName;
 	}
 
-	public String getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
-	public List<Bundler> getListBundler() {
-		return listBundler;
+	public List<GatewayStatus> getGatewayStatus() {
+		return gatewayStatus;
 	}
 
-	public void setListBundler(List<Bundler> listBundler) {
-		this.listBundler = listBundler;
+	public void setGatewayStatus(List<GatewayStatus> gatewayStatus) {
+		this.gatewayStatus = gatewayStatus;
 	}
 
-	public List<Service> getListService() {
-		return listService;
+	public List<BundlerInstalled> getBundlerInstalled() {
+		return bundlerInstalled;
 	}
 
-	public void setListService(List<Service> listService) {
-		this.listService = listService;
+	public void setBundlerInstalled(List<BundlerInstalled> bundlerInstalled) {
+		this.bundlerInstalled = bundlerInstalled;
 	}
 
-	// public String[] getIntefaceNetwork() {
-	// return intefaceNetwork;
-	// }
-	//
-	// public void setIntefaceNetwork(String[] intefaceNetwork) {
-	// this.intefaceNetwork = intefaceNetwork;
-	// }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((bundlerInstalled == null) ? 0 : bundlerInstalled.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((firmware == null) ? 0 : firmware.hashCode());
+		result = prime * result + ((gatewayStatus == null) ? 0 : gatewayStatus.hashCode());
+		result = prime * result + ((hostName == null) ? 0 : hostName.hashCode());
+		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((mac == null) ? 0 : mac.hashCode());
+		result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
+		result = prime * result + ((model == null) ? 0 : model.hashCode());
+		result = prime * result + (status ? 1231 : 1237);
+		result = prime * result + (int) (storage ^ (storage >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Gateway other = (Gateway) obj;
+		if (bundlerInstalled == null) {
+			if (other.bundlerInstalled != null)
+				return false;
+		} else if (!bundlerInstalled.equals(other.bundlerInstalled))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (firmware == null) {
+			if (other.firmware != null)
+				return false;
+		} else if (!firmware.equals(other.firmware))
+			return false;
+		if (gatewayStatus == null) {
+			if (other.gatewayStatus != null)
+				return false;
+		} else if (!gatewayStatus.equals(other.gatewayStatus))
+			return false;
+		if (hostName == null) {
+			if (other.hostName != null)
+				return false;
+		} else if (!hostName.equals(other.hostName))
+			return false;
+		if (ip == null) {
+			if (other.ip != null)
+				return false;
+		} else if (!ip.equals(other.ip))
+			return false;
+		if (lastUpdate == null) {
+			if (other.lastUpdate != null)
+				return false;
+		} else if (!lastUpdate.equals(other.lastUpdate))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (mac == null) {
+			if (other.mac != null)
+				return false;
+		} else if (!mac.equals(other.mac))
+			return false;
+		if (manufacturer == null) {
+			if (other.manufacturer != null)
+				return false;
+		} else if (!manufacturer.equals(other.manufacturer))
+			return false;
+		if (model == null) {
+			if (other.model != null)
+				return false;
+		} else if (!model.equals(other.model))
+			return false;
+		if (status != other.status)
+			return false;
+		if (storage != other.storage)
+			return false;
+		return true;
+	}
+
 }

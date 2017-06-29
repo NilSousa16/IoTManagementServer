@@ -28,13 +28,13 @@ public class CommandGatewayInformationFull {
 			System.out.println(">>>>> Firmware: " + gateway.getFirmware()); //NULL
 			System.out.println(">>>>> Status: " + gateway.isStatus()); //ALTERADO NO BANCO
 			System.out.println(">>>>> LastUpdate: " + gateway.getLastUpdate()); //OK
-			System.out.println(">>>>> BaterryLevel: " + gateway.getBaterryLevel()); //OK
-			System.out.println(">>>>> TotalMemory: " + gateway.getTotalMemory()); //OK
-			System.out.println(">>>>> UsedMemory: " + gateway.getUsedMemory()); //OK
-			System.out.println(">>>>> FreeMemory: " + gateway.getFreeMemory()); //OK
-			System.out.println(">>>>> UsedProcessor" + gateway.getUsedProcessor() + "%"); //OK
-			System.out.println(">>>>> FreeProcessor: " + gateway.getFreeProcessor() + "%"); //OK
-			System.out.println(">>>>> Mac: " + gateway.getMac()); //OK
+//			System.out.println(">>>>> BaterryLevel: " + gateway.getBaterryLevel()); //OK
+//			System.out.println(">>>>> TotalMemory: " + gateway.getTotalMemory()); //OK
+//			System.out.println(">>>>> UsedMemory: " + gateway.getUsedMemory()); //OK
+//			System.out.println(">>>>> FreeMemory: " + gateway.getFreeMemory()); //OK
+//			System.out.println(">>>>> UsedProcessor" + gateway.getUsedProcessor() + "%"); //OK
+//			System.out.println(">>>>> FreeProcessor: " + gateway.getFreeProcessor() + "%"); //OK
+//			System.out.println(">>>>> Mac: " + gateway.getMac()); //OK
 			System.out.println(">>>>> Ip: " + gateway.getIp()); //OK
 			System.out.println(">>>>> HostName: " + gateway.getHostName()); //OK
 			System.out.println(">>>>> Location: " + gateway.getLocation()); //NULL

@@ -3,15 +3,22 @@ package br.ufba.dcc.wiser.fot.manager.service;
 import java.util.List;
 
 import br.ufba.dcc.wiser.fot.manager.model.Service;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.ServiceProvided;
 
 public interface ServiceDBService {
 	
-	void add(Service bundler) throws Exception;
-	void update(Service bundler);
-	Service find (String name);
-	void desactive (String name) throws Exception;
-	public void remove(String name) throws Exception;
-	void active(Service service);
-	List<Service> getListService();
-
+	public void add(Service service);
+	public void update(Service service);
+	public Service find (String name);
+	public void remove(String name);
+	public List<Service> getListService();
+	
+	public void addServiceProvided(BundlerInstalled bundlerInstalled, Service service);
+	public void removeServiceProvided(BundlerInstalled bundlerInstalled, Service serviceFind);
+	public ServiceProvided findServiceProvided(BundlerInstalled bundlerInstalled, Service serviceFind);
+	
+	public void addServiceUsed(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
+	public void removeServiceUsed(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
+	
 }

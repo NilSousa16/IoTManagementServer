@@ -1,0 +1,160 @@
+<Gateway>
+
+Package ...command <possui as classe responsáveis por executar comandos via linha de comando>
+	Classes
+		CommandBundleInfo <responsável por retornar informações sobre os bundles do determinado gateway> NOT IMPLEMENTED
+		CommandServiceInfo <responsável por retornar informações sobres os serviços instalados nos bundles do determinado gateway> NOT IMPLEMENTED
+
+Package ...info <possui as classe responsáveis por capturar as informações do gateway>
+	Classes
+		BundlerInfo <responsável por capturar as informações dos bundles> TESTED-OK
+				public List<Bundler> getListBundler() throws Exception - TESTED-OK
+
+		GatewayInfo <responsável por capturar as informações do gateway> - TESTED-OK
+				all method - TESTED-OK
+
+		GatewayStatusInfo <responsável por capturar as informações de status dos gateway> - TESTED-OK
+				all method - TESTED-OK
+
+		ServiceInfo <responsável por capturar as informações dos serviços existentes nos bundles> - TESTED-OK
+				public List<Service> getListService() - TESTED-OK
+				private String formatOutput(String string) - METHOD IMPLEMENTED BY KARAF
+				private boolean isCommand(String[] objectClasses) - METHOD IMPLEMENTED BY KARAF
+				//public final class ServiceClassComparator implements Comparator<ServiceReference<?>> - METHOD IMPLEMENTED BY KARAF
+
+Package ...model <possui os modelos das entidades a serem trabalhadas>
+	Classes
+		Actuador <Modelo de atuador> NOT IMPLEMENTED
+		Bundler <Modelo de bundler> OK
+		CPU <Modelo de informação de CPU utilizado pela classe Gateway> OK
+		Device <Modelo de dispositivo> NOT IMPLEMENTED
+		Gateway <Modelo de gateway> OK 
+		GatewayStatus <Modelo de informações de status do gateway>
+		Service <Modelo de serviço utilizado na classe Gateway > OK
+		Storage <Modelo de informações de armazenamento utilizado na classe Gateway> OK
+
+Package ...send <possui as classe responsáveis por executar definir quais informações serão enviadas para o servidor>
+	Classes
+		ControlSendBundlerInformation <responsável por determinar as informações a serem enviadas dos bundlers> - TESTED-OK
+				public void compareInfoBundler() - TESTED-OK
+				public void infoBundlerDisconnected(List<Bundler> disconnected) - TESTED-OK
+				public void infoBundlerConnected(List<Bundler> connected) - TESTED-OK
+				public void infoBundlerAltered(List<Bundler> altered) - TESTED-OK
+				public List<Bundler> compareToBundles(List<Bundler> l1, List<Bundler> l2) - TESTED-OK
+				public List<Bundler> compareToInformation(List<Bundler> l1, List<Bundler> l2) - TESTED-OK
+
+		ControlSendGatewayInformation <responsável por determinar as informações a serem enviadas dos gateway> - TESTED-OK
+				public void CompareInfoGateway() - TESTED-OK
+
+		ControlSendGatewayStatusInformation <responsável por determinar as informações de status dos gateways a serem enviadas> - TESTED-OK
+				public void CompareInfoGatewayStatus() - TESTED-OK
+
+		// os métodos responsáveis por realizar o monitoramento da mudança das informações dos bundles não serão utilizados, pois,
+		// essa e uma atividade exclusiva da classe ControlSendBundlerInformation. No ControlSendServiceInformation será apenas
+		// monitorado as entradas e saídas de bundles para atualização da lista de bundlesUse.
+		ControlSendServiceInformation <responsável por determinar as informações a serem enviadas dos services> - TESTED-OK ()
+			public void compareInfoService(List<Service> listSist) - TESTED-OK
+			public void infoServiceDisconnected(List<Service> serviceDisconnected) - TESTED-OK
+			public void infoServiceConnected(List<Service> serviceConnected) - TESTED-OK
+			public void infoServiceAlteredConnectedBundlerUse(List<Service> listServiceBundlesConnected) - TESTED-OK
+			public void infoServiceAlteredDisconnectedBundlerUse(List<Service> listServiceBundlesDisconnected) - TESTED-OK
+			public void infoServiceAlteredInformationAlteredBundlerUse(List<Service> listServiceBundlesAltered) - TESTED-OK
+			public List<Service> compareToServices(List<Service> s1, List<Service> s2) - TESTED-OK
+			public List<Service> compareToServiceInformationBundlerConnected(List<Service> s1, List<Service> s2) - TESTED-OK
+			public List<Service> compareToServiceInformationBundlerDisconnected(List<Service> s1, List<Service> s2) - TESTED-OK
+			public List<Service> compareToServiceInformationBundlerAltered(List<Service> s1, List<Service> s2) - TESTED-OK
+			public List<Bundler> compareToServiceInformationCompareBundlers(List<Bundler> l1, List<Bundler> l2) - TESTED-OK
+			public List<Bundler> compareToServiceInformationCompareInformationBundler(List<Bundler> l1, List<Bundler> l2) - TESTED-OK 
+				
+
+
+Package ...service <possui as classe responsáveis por enviar as informações para o servidor>
+	Classes
+		BundlerService <responsável por fornecer e enviar informações sobre os bundles do gateway específico> MISSING TEST
+		GatewayService <responsável por fornecer e enviar informações sobre o gateway específico> MISSING TEST
+		GatewayStatusService <responsável por fornecer e enviar informações sobre o status do gateway específico> MISSING TEST
+		ServiceService <responsável por fornecer e enviar informações sobre os serviços do gateway específico> MISSING TEST
+
+Package ...test <possui testes de utilização de recursos>
+	Classes
+
+Package ...util <possui classes que realizam atividades em geral>
+	Classes
+
+
+<Servidor>
+
+Package ...administration <responsável por realizar a intermediação entre as informações que vem dos gateways e as intervenções do servidor>
+	Classes
+		DiscoveyGateway <Responsável por verificar a existência dos gateways na rede e identificar aquele que estão desconectados e os que 
+							estão conectados e solicitar o armazenamento das informações de IP, MAC e STATUS> TESTED-OK
+				public void discovery() - TESTED-OK
+				private void addGateway(Set<Member> list) - TESTED-OK
+				private void desactiveGateway(Set<Member> list) - TESTED-OK
+
+		InformationBundler <Responsável por capturar e armazenar as informações relativas aos bundles dos gateways>
+		InformationGateway <Responsável por capturar e armazenar as informações relativas ao status do gateway>
+		InformationService <Responsável por capturar e armazenar as informações relativas aos serviços dos gateways>
+
+Package ...command <possui as classe responsáveis por executar comandos via linha de comando>
+	Classes
+		CommandGatewayBundleInformation <> IMPLEMENTATION TEST
+		CommandGatewayInformationFull <> IMPLEMENTATION TEST
+		CommandGatewayInformationSimple <> IMPLEMENTATION TEST
+		CommandServiceInformationSimple <> IMPLEMENTATION TEST
+
+Package ...controler <possui as classe responsáveis por executar funções remotas nos gateways>
+	Classes		
+		GatewayController <> NOT IMPLEMENTED
+		ServiceController <> NOT IMPLEMENTED
+
+Package ...impl <responsável por realizar as operações de banco de dados>
+	Classes	
+		BundlerDBImpl <responsável por armazenar as informações relativas ao bundler>
+		GatewayDBImpl <responsável por armazenar as informações relativas ao gateway>
+		ServiceDBImpl <responsável por armazenar as informações relativas ao service>
+
+Package ...model <possui os modelos das entidades a serem trabalhadas>
+	Classes
+		Actuador <Modelo de atuador>
+		Bundler <Modelo de bundler>
+		Device <Modelo de device>
+		Gateway <Modelo de gateway>
+		Location <Modelo de location>
+		Sensor <Modelo de sensor>
+		Service <Modelo de service>
+
+Package ...model.communication <possui os modelos complementares das entidades para comunicação>
+	Classes
+		BundlerCommunication <Modelo de bundler para comunicação>
+		GatewayCommunication <Modelo de gateway para comunicação>
+		ServiceCommunication <Modelo de service para comunicação>
+
+Package ...model.relationship <possui os modelos complementares das entidades para armazenamento em banco>
+	Classes
+		ActuadorUsed <Modelo de actuadorused para o banco>
+		BundlerInstalled <Modelo de bundlerinstalled para o banco>
+		BundlerInstalledId <Modelo de bundlerinstalledid para o banco>
+		DeviceUsed <Modelo de deviceused para o banco>
+		DeviceUsedId <Modelo de deviceusedid para o banco>
+		GatewayStatus <Modelo de gatewaystatus para o banco>
+		SensorUsed <Modelo de sensorused para o banco>
+		ServiceProvided <Modelo de serviceprovided para o banco>
+		ServiceProvidedId <Modelo de serviceprovidedid para o banco>
+		ServiceUsed <Modelo de serviceused para o banco>
+
+Package ...service <possui as interface para implementação das classes relativas ao banco de dados>
+	Classes
+		BundlerDBService <Interface para uso do banco para o bundler>
+		GatewayDBService <Interface para uso do banco para o gateway>
+		ServiceDBService <Interface para uso do banco para o service>
+
+
+
+UndeclaredThrowableException 
+
+NoRouteToHostException
+
+FileNotFoundException
+
+JSONException

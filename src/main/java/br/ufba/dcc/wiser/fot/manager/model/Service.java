@@ -1,23 +1,23 @@
 package br.ufba.dcc.wiser.fot.manager.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-// Class that reflects the serviceIoT
-public class Service {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "service")
+public class Service implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue
 	private long id;
+	
 	private String nameService;
-	private String bundlerProvide;
-	private List<String> listUsesBundles = new ArrayList<String>();
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getNameService() {
 		return nameService;
@@ -25,22 +25,6 @@ public class Service {
 
 	public void setNameService(String nameService) {
 		this.nameService = nameService;
-	}
-
-	public String getBundlerProvide() {
-		return bundlerProvide;
-	}
-
-	public void setBundlerProvide(String bundlerProvide) {
-		this.bundlerProvide = bundlerProvide;
-	}
-
-	public List<String> getListUsesBundles() {
-		return listUsesBundles;
-	}
-
-	public void setListUsesBundles(List<String> listUsesBundles) {
-		this.listUsesBundles = listUsesBundles;
 	}
 
 }

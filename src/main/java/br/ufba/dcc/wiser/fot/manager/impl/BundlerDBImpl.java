@@ -5,6 +5,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import br.ufba.dcc.wiser.fot.manager.model.Bundler;
+import br.ufba.dcc.wiser.fot.manager.model.Gateway;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalledId;
 import br.ufba.dcc.wiser.fot.manager.service.BundlerDBService;
 
 public class BundlerDBImpl implements BundlerDBService {
@@ -19,9 +22,13 @@ public class BundlerDBImpl implements BundlerDBService {
 		this.entityManager = entityManager;
 	}
 
-	public void add(Bundler bundler) throws Exception {
-		entityManager.persist(bundler);
-		entityManager.flush();
+	public void add(Bundler bundler) {
+		try {
+			entityManager.persist(bundler);
+			entityManager.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void update(Bundler bundler) {
@@ -36,31 +43,51 @@ public class BundlerDBImpl implements BundlerDBService {
 		return null;
 	}
 
-	public void desactive(String name) throws Exception {
-		// TODO Auto-generated method stub
-	}
-
-	public void remove(String name) throws Exception {
-
+	public Bundler find(String name, String version) {
+		// corrigir para buscar por nome e versão
 		Bundler bundler = entityManager.find(Bundler.class, name);
-
 		if (bundler != null) {
-			entityManager.remove(bundler);
+			return bundler;
 		}
-
+		return null;
 	}
 
-	public void active(Bundler bundler) {
-		// TODO Auto-generated method stub
-
+	public void remove(String name) {
+		try {
+			Bundler bundler = entityManager.find(Bundler.class, name);
+			if (bundler != null) {
+				entityManager.remove(bundler);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Bundler> getListBundler() {
-		if (entityManager.createQuery("select p from Bundler p", Bundler.class).getResultList() == null) {
-			System.out.println(">>>>>>>>>>>Lista vazia em getListGateway.");
-		}
-
 		return entityManager.createQuery("select p from Bundler p", Bundler.class).getResultList();
+	}
+
+	public void addBundlerInstalled(Bundler bundler, Gateway gateway) {
+		BundlerInstalled bundlerInstalled = new BundlerInstalled();
+
+		bundlerInstalled.setId(new BundlerInstalledId(gateway, bundler));
+		bundlerInstalled.setStatus(true);
+		entityManager.persist(bundlerInstalled);
+	}
+
+	public BundlerInstalled findBundlerInstalled (Bundler bundler, Gateway gateway) {
+		BundlerInstalled bundlerInstalled = entityManager.find(BundlerInstalled.class, 
+				new BundlerInstalledId(gateway, bundler));
+		
+		return bundlerInstalled;
+	}
+	
+	public void removeBundlerInstalled (BundlerInstalled bundlerInstalled) {
+		entityManager.remove(bundlerInstalled);
+	}
+	
+	public void updateBundlerInstalled(BundlerInstalled bundlerInstalled) {
+		entityManager.merge(bundlerInstalled);
 	}
 
 }
