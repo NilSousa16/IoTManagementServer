@@ -10,7 +10,7 @@ import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.model.communication.GatewayCommunication;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
-public class InformationGateway {
+public class InformationGatewayTest {
 
 	// assing in the blueprint
 	private GatewayDBService gatewayDBService = null;
@@ -19,11 +19,11 @@ public class InformationGateway {
 	public void setGatewayDBService(GatewayDBService gatewayDBService) {
 		this.gatewayDBService = gatewayDBService;
 	}
-	
+
 	public void demoFunction() {
-		if(gatewayDBService == null) {
+		if (gatewayDBService == null) {
 			System.out.println(">>>Method InformationGateway isn't with the populated properties.");
-			
+
 			Gateway gateway = new Gateway();
 
 			gateway.setIp("000.000.000.000");
@@ -38,15 +38,14 @@ public class InformationGateway {
 		}
 	}
 
-	@POST
-	@Path("/addgateway")
-	@Produces("application/json")
+	// @POST
+	// @Path("/addgateway")
+	// @Produces("application/json")
 	public void addGatewayInformation(String value) {
 
 		System.out.println("Ok - Information received in addGateway");
-		System.out.println(value);
 		value = "{\"description\":\"Debian_Light\",\"model\":\"0.11.2\",\"manufacturer\":\"Raspberry\",\"firmware\":\"2.1.0\",\"storage\":10982362,\"lastUpdate\":\"05/07/2017 5:50 - PM\",\"mac\":\"08-00-27-31-A7-71\",\"ip\":\"192.168.1.102\",\"hostName\":\"RaspberryHostName\",\"location\":\"-12.9990189,-38.5140298\"}";
-		
+
 		Gson gson = new Gson();
 		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
 
@@ -54,14 +53,14 @@ public class InformationGateway {
 		System.out.println("VERIFICATION LOCAL VARIABLES");
 		System.out.println("--------------------------------------\n");
 		System.out.println(">>>IP: " + gatewayCommunication.getIp() + " MAC: " + gatewayCommunication.getMac());
-		
-		if(gatewayDBService == null) {
+
+		if (gatewayDBService == null) {
 			System.out.println(">>> GatewayDBService is null.");
 		} else {
 			System.out.println(">>> GatewayDBService is not null.");
 		}
 		System.out.println("\n--------------------------------------\n");
-		
+
 		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
 
 		// If the gateway does not exist in the database
@@ -124,9 +123,9 @@ public class InformationGateway {
 		}
 	}
 
-	@POST
-	@Path("/altergatewayinformation")
-	@Produces("application/json")
+	// @POST
+	// @Path("/altergatewayinformation")
+	// @Produces("application/json")
 	public void alterGatewayInformation(String value) {
 
 		System.out.println("Ok - Information received in alterGatewayInformation");
@@ -134,13 +133,13 @@ public class InformationGateway {
 
 		Gson gson = new Gson();
 		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
-		
+
 		System.out.println("\n--------------------------------------");
 		System.out.println("VERIFICATION LOCAL VARIABLES");
 		System.out.println("--------------------------------------\n");
 		System.out.println(">>>IP: " + gatewayCommunication.getIp() + " MAC: " + gatewayCommunication.getMac());
-		
-		if(gatewayDBService == null) {
+
+		if (gatewayDBService == null) {
 			System.out.println(">>> GatewayDBService is null.");
 		} else {
 			System.out.println(">>> GatewayDBService is not null.");

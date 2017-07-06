@@ -90,4 +90,9 @@ public class BundlerDBImpl implements BundlerDBService {
 		entityManager.merge(bundlerInstalled);
 	}
 
+	@Override
+	public String toString() {
+		return "BundlerDBImpl in full operation";
+	}
+	
 }

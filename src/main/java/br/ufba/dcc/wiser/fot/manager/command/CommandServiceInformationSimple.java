@@ -33,11 +33,11 @@ public class CommandServiceInformationSimple implements Action{
 		Map<String, Integer> serviceNames = getServiceNamesMap(bundleContext);
 		ArrayList<String> serviceNamesList = new ArrayList<String>(serviceNames.keySet());
 		Collections.sort(serviceNamesList);
-		System.out.println("####################3");
+		System.out.println("####################");
 		for (String name : serviceNamesList) {
 			System.out.println(name + " (" + serviceNames.get(name) + ")");
 		}
-		System.out.println("####################3");
+		System.out.println("####################");
 	}
 
 	public static Map<String, Integer> getServiceNamesMap(BundleContext bundleContext) {

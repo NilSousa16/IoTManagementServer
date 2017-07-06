@@ -9,7 +9,7 @@ import org.apache.felix.service.command.CommandSession;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
-@Command(scope = "ws", name = "gatewayInformationSimple")
+@Command(scope = "wiser", name = "gateway-information-simple")
 public class CommandGatewayInformationSimple implements Action {
 
 	private GatewayDBService gatewayDBService = null;
@@ -20,13 +20,17 @@ public class CommandGatewayInformationSimple implements Action {
 	
 	public Object execute(CommandSession session) throws Exception {
 		List<Gateway> gateways = gatewayDBService.getListGateway();
-
-		System.out.println("\n##########GATEWAY REPORT BD##########");
+		System.out.println("\n---------------------------------------------------");
+		System.out.println("REPORT REGISTERED GATEWAYS");
+		System.out.println("---------------------------------------------------");
+		if (gateways.isEmpty()) {
+			System.out.println("\nNo items stored.\n");
+		}
 		for (Gateway gateway : gateways) {
 			System.out.println(
 					"Ip [" + gateway.getIp() + "] Mac [" + gateway.getMac() + "] Status [" + gateway.isStatus() + "]");
 		}
-		System.out.println("#####################################\n");
+		System.out.println("---------------------------------------------------");
 		return null;
 	}
 

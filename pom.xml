@@ -49,8 +49,8 @@
 						</Import-Package>
 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence> <!--IN -->
 						<!-- SE DER RUIM PO TIRAR  -->
-						<Embed-Dependency>scope=compile|runtime</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
+<!-- 						<Embed-Dependency>scope=compile|runtime</Embed-Dependency> -->
+<!-- 						<Embed-Transitive>true</Embed-Transitive> -->
 						<!-- FIM DO QUE PODE DAR RUIM -->
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>

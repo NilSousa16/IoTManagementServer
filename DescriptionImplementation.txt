@@ -149,6 +149,13 @@ Package ...service <possui as interface para implementação das classes relativ
 		GatewayDBService <Interface para uso do banco para o gateway>
 		ServiceDBService <Interface para uso do banco para o service>
 
+Command
+	wiser:report-bundler-gateway-active - retorna os bundles dos gateways ativos
+	wiser:report-bundler-full - retorna os bundles dos gateways ativos e inativos
+	wiser:
+
+
+
 
 
 UndeclaredThrowableException 

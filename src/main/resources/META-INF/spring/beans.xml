@@ -49,13 +49,13 @@
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
 	
-	<bean id="information_gateway" class="br.ufba.dcc.wiser.fot.manager.administration.InformationGateway" />
+<!-- 	<bean id="information_gateway" class="br.ufba.dcc.wiser.fot.manager.administration.InformationGateway" /> -->
 
-	<jaxrs:server id="information_gateway_method" address="/informationgateway">
-		<jaxrs:serviceBeans>
-			<ref bean="information_gateway" />
-		</jaxrs:serviceBeans>
-	</jaxrs:server>
+<!-- 	<jaxrs:server id="information_gateway_method" address="/informationgateway"> -->
+<!-- 		<jaxrs:serviceBeans> -->
+<!-- 			<ref bean="information_gateway" /> -->
+<!-- 		</jaxrs:serviceBeans> -->
+<!-- 	</jaxrs:server> -->
 	
 	<bean id="information_gateway_status" class="br.ufba.dcc.wiser.fot.manager.administration.InformationGatewayStatus" />
 

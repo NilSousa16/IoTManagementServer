@@ -7,9 +7,10 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
-@Command(scope = "ws", name = "gatewayBundleInformationSimple")
+@Command(scope = "wiser", name = "report-bundler-active")
 public class CommandGatewayBundleInformation implements Action {
 
 	private GatewayDBService gatewayDBService = null;
@@ -19,23 +20,34 @@ public class CommandGatewayBundleInformation implements Action {
 	}
 
 	public Object execute(CommandSession session) throws Exception {
-		List<Gateway> gateways = gatewayDBService.getListGateway();
+		List<Gateway> listGateway = gatewayDBService.getListGateway();
 
-		System.out.println("\n##########GATEWAY REPORT BD##########");
-		for (Gateway gateway : gateways) {
+		System.out.println("\n---------------------------------------------------");
+		System.out.println("REPORT BUNDLES ACTIVE");
+		System.out.println("---------------------------------------------------");
+		if (listGateway.isEmpty()) {
+			System.out.println("\nNo items stored.\n");
+		}
+		for (Gateway gateway : listGateway) {
 			if (gateway.isStatus()) {
 
-				//List<Bundler> list = gateway.getListBundler();
+				List<BundlerInstalled> listBundler = gateway.getBundlerInstalled();
 
-				System.out.println("\n>>>>>> GatewayIP: " + gateway.getIp());
+				System.out.println("\nGatewayIP: " + gateway.getIp());
+				System.out.println("GatewayMAC: " + gateway.getMac());
 
-				//for (Bundler bundle : list) {
-				//	System.out.println(" - Name: " + bundle.getName() + " Version: " + bundle.getVersion()
-				//			+ " Location: " + bundle.getLocation());
-				//}
+				if (!listBundler.isEmpty() || listBundler == null) {
+					for (BundlerInstalled bundlerInstalled : listBundler) {
+
+						System.out.println(bundlerInstalled.getId().getBundler().getName());
+						System.out.println(bundlerInstalled.getId().getBundler().getLocation());
+						System.out.println(bundlerInstalled.getId().getBundler().getVersion());
+						System.out.println(bundlerInstalled.isStatus());
+					}
+				}
 			}
 		}
-		System.out.println("#####################################\n");
+		System.out.println("---------------------------------------------------\n");
 		return null;
 	}
 

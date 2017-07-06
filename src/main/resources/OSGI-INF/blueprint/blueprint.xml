@@ -34,6 +34,8 @@
 	<reference id="groupManager" interface="org.apache.karaf.cellar.core.GroupManager">
 	</reference>
 
+	<!-- <reference id="gatewayServiceX" interface="br.ufba.dcc.wiser.fot.manager.service.GatewayDBService"> -->
+	<!-- </reference> -->
 	<!-- <reference id="bundleContext" interface="org.osgi.framework.BundleContext"> -->
 	<!-- </reference> -->
 
@@ -41,42 +43,48 @@
 
 	<service ref="gatewayService"
 		interface="br.ufba.dcc.wiser.fot.manager.service.GatewayDBService" />
-		
+
 	<service ref="bundlerService"
 		interface="br.ufba.dcc.wiser.fot.manager.service.BundlerDBService" />
 
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>BEANS<<<<<<<<<<<<<<<<<<<<<<<< -->
-	
+
 	<bean id="gatewayService" class="br.ufba.dcc.wiser.fot.manager.impl.GatewayDBImpl">
 		<jpa:context unitname="person" property="entityManager" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
-	
+
 	<bean id="bundlerService" class="br.ufba.dcc.wiser.fot.manager.impl.BundlerDBImpl">
 		<jpa:context unitname="person" property="entityManager" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 
-<!-- 	<bean id="gateway_monitor" -->
-<!-- 		class="br.ufba.dcc.wiser.fot.manager.administration.GatewayMonitor" -->
-<!-- 		init-method="monitorGateway"> -->
-<!-- 		<property name="bundlerDBService" ref="bundlerService" /> -->
-<!-- 		<property name="gatewayDBService" ref="gatewayService" /> -->
-<!-- 		<property name="instance" ref="hazelcastInstance" /> -->
-<!-- 	</bean> -->
-	
-	<bean id="discovery_gateway"
-		class="br.ufba.dcc.wiser.fot.manager.administration.DiscoveryGateway"
-		init-method="discovery">
-		<property name="gatewayDBService" ref="gatewayService" />
-		<property name="instance" ref="hazelcastInstance" />
-	</bean>
-	
-	<!-- <bean id="service_monitor" class="br.ufba.dcc.wiser.fot.manager.administration.ServiceInfoTESTE" -->
-	<!-- init-method="listNames"> -->
-	<!-- <property name="bundleContext" ref="bundleContext" /> -->
+	<!-- <bean id="discovery_gateway" -->
+	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.DiscoveryGateway" -->
+	<!-- init-method="discovery"> -->
+	<!-- <property name="gatewayDBService" ref="gatewayService" /> -->
+	<!-- <property name="instance" ref="hazelcastInstance" /> -->
 	<!-- </bean> -->
 
+	<!-- <bean id="information_bundler" -->
+	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.InformationBundler"> -->
+	<!-- <property name="gatewayDBService" ref="gatewayService" /> -->
+	<!-- <property name="bundlerDBService" ref="bundlerService" /> -->
+	<!-- </bean> -->
+
+	<bean id="information_gateway"
+		class="br.ufba.dcc.wiser.fot.manager.administration.InformationGateway">
+		<property name="gatewayDBService" ref="gatewayService" />
+	</bean>
+	
+	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>JAX-RS<<<<<<<<<<<<<<<<<<<<<<<<< -->
+	
+	<jaxrs:server id="information_gateway_method" address="/informationgateway">
+		<jaxrs:serviceBeans>
+			<ref component-id="information_gateway" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+	
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMANDS<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 	<command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
@@ -87,6 +95,32 @@
 		<!-- </action> -->
 		<!-- </command> -->
 
+		<!-- <command> -->
+		<!-- <action -->
+		<!-- class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayInformationSimple"> -->
+		<!-- <property name="gatewayDBService" ref="gatewayService" /> -->
+		<!-- </action> -->
+		<!-- </command> -->
+
+		<!-- <command> -->
+		<!-- <action -->
+		<!-- class="br.ufba.dcc.wiser.fot.manager.command.CommandServiceInformationSimple"> -->
+		<!-- </action> -->
+		<!-- </command> -->
+
+		<command>
+			<action class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayAdd">
+				<property name="gatewayDBService" ref="gatewayService" />
+			</action>
+		</command>
+
+		<command>
+			<action
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayBundleInformation">
+				<property name="gatewayDBService" ref="gatewayService" />
+			</action>
+		</command>
+
 		<command>
 			<action
 				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayInformationSimple">
@@ -95,14 +129,7 @@
 		</command>
 
 		<command>
-			<action
-				class="br.ufba.dcc.wiser.fot.manager.command.CommandServiceInformationSimple">
-			</action>
-		</command>
-		
-		<command>
-			<action
-				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayBundleInformation">
+			<action class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewaySearch">
 				<property name="gatewayDBService" ref="gatewayService" />
 			</action>
 		</command>
@@ -114,15 +141,15 @@
 	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
 
-<!-- 		<route> final-->
-<!-- 			<from uri="timer://myTimer?period=8000" /> -->
-<!-- 			<to uri="bean:discovery_gateway?method=discovery" /> -->
-<!-- 		</route> -->
-		
-<!-- 		<route> -->
-<!-- 			<from uri="timer://myTimer?period=15000" /> -->
-<!-- 			<to uri="bean:gateway_monitor?method=monitorGateway" /> -->
-<!-- 		</route> -->
+		<!-- <route> final -->
+		<!-- <from uri="timer://myTimer?period=8000" /> -->
+		<!-- <to uri="bean:discovery_gateway?method=discovery" /> -->
+		<!-- </route> -->
+
+		<!-- <route> -->
+		<!-- <from uri="timer://myTimer?period=15000" /> -->
+		<!-- <to uri="bean:gateway_monitor?method=monitorGateway" /> -->
+		<!-- </route> -->
 
 		<!-- <route> -->
 		<!-- <from uri="timer://myTimer?period=5000" /> -->
@@ -133,6 +160,11 @@
 		<!-- <from uri="timer://myTimer?period=13000" /> -->
 		<!-- <to uri="bean:gateway_monitor?method=updateDataGateway" /> -->
 		<!-- </route> -->
+
+<!-- 		<route> -->
+<!-- 			<from uri="timer://myTimer?period=20000" /> -->
+<!-- 			<to uri="bean:information_gateway?method=addGatewayInformation" /> -->
+<!-- 		</route> -->
 
 	</camelContext>
 </blueprint>

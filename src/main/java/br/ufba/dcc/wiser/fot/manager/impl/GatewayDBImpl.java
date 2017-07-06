@@ -19,9 +19,13 @@ public class GatewayDBImpl implements GatewayDBService {
 		this.entityManager = entityManager;
 	}
 
-	public void add(Gateway gateway) throws Exception {		
-		entityManager.persist(gateway);
-		entityManager.flush();
+	public void add(Gateway gateway) {	
+		try {
+			entityManager.persist(gateway);
+			entityManager.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// updates all gateway information
@@ -65,11 +69,16 @@ public class GatewayDBImpl implements GatewayDBService {
 	}
 
 	public List<Gateway> getListGateway() {
-		if (entityManager.createQuery("select p from Gateway p", Gateway.class).getResultList() == null) {
+		if (entityManager.createQuery("select p from Gateway p", Gateway.class).getResultList().isEmpty()) {
 			System.out.println(">>>>>>>>>>>Lista vazia em getListGateway.");
 		}
 
 		return entityManager.createQuery("select p from Gateway p", Gateway.class).getResultList();
+	}
+
+	@Override
+	public String toString() {
+		return "GatewayDBImpl in full operation";
 	}
 
 }
