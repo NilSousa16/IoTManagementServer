@@ -10,7 +10,7 @@ import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
-@Command(scope = "wiser", name = "report-bundler-active")
+@Command(scope = "wiser", name = "gateway-bundler")
 public class CommandGatewayBundleInformation implements Action {
 
 	private GatewayDBService gatewayDBService = null;

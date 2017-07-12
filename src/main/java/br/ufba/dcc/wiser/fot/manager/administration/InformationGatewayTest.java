@@ -1,9 +1,5 @@
 package br.ufba.dcc.wiser.fot.manager.administration;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
 import com.google.gson.Gson;
 
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
@@ -92,7 +88,7 @@ public class InformationGatewayTest {
 				gatewayFind.setIp(gatewayCommunication.getIp());
 			}
 
-			if (gatewayCommunication.getLastUpdate() != null && gatewayCommunication.getLastUpdate() != "") {
+			if (gatewayCommunication.getLastUpdate() != null) {
 				gatewayFind.setLastUpdate(gatewayCommunication.getLastUpdate());
 			}
 
@@ -164,7 +160,7 @@ public class InformationGatewayTest {
 			gatewayFind.setIp(gatewayCommunication.getIp());
 		}
 
-		if (gatewayCommunication.getLastUpdate() != null && gatewayCommunication.getLastUpdate() != "") {
+		if (gatewayCommunication.getLastUpdate() != null) {
 			gatewayFind.setLastUpdate(gatewayCommunication.getLastUpdate());
 		}
 

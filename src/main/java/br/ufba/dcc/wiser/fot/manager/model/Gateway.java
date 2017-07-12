@@ -1,6 +1,7 @@
 package br.ufba.dcc.wiser.fot.manager.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
 import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
@@ -28,7 +31,8 @@ public class Gateway implements Serializable {
 	private String firmware;
 	private boolean status;
 	private long storage;
-	private String lastUpdate;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar lastUpdate;
 	private String ip;
 	private String hostName;
 
@@ -99,11 +103,11 @@ public class Gateway implements Serializable {
 		this.storage = storage;
 	}
 
-	public String getLastUpdate() {
+	public Calendar getLastUpdate() {
 		return lastUpdate;
 	}
 
-	public void setLastUpdate(String lastUpdate) {
+	public void setLastUpdate(Calendar lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

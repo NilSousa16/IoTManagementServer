@@ -10,6 +10,7 @@ import br.ufba.dcc.wiser.fot.manager.model.Bundler;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.model.communication.BundlerCommunication;
 import br.ufba.dcc.wiser.fot.manager.model.communication.GatewayCommunication;
+import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
 import br.ufba.dcc.wiser.fot.manager.service.BundlerDBService;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
@@ -39,62 +40,28 @@ public class InformationBundler {
 
 		Gson gson = new Gson();
 		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
-
-		System.out.println("gatewayCommunicationMac: " + gatewayCommunication.getMac());
-
-		if (gatewayCommunication.getListBundler().isEmpty()) {
-			System.out.println("List bundles is empty");
-		} else {
+		System.out.println("Before gatewayDBService.find(gatewayCommunication.getMac())");
+		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
+		System.out.println("After gatewayDBService.find(gatewayCommunication.getMac())");
+		if (gatewayFind != null) {
 			for (BundlerCommunication bc : gatewayCommunication.getListBundler()) {
-				System.out.println(">>>>> BundlerName: " + bc.getName());
-				System.out.println(">>>>> BundlerVersion: " + bc.getVersion());
+
+				Bundler newBundler = new Bundler();
+				Bundler bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
+
+				if (bundlerDB == null) {
+					newBundler.setName(bc.getName());
+					newBundler.setLocation(bc.getLocation());
+					newBundler.setVersion(bc.getVersion());
+
+					bundlerDBService.add(newBundler);
+					bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
+				}
+
+				bundlerDBService.addBundlerInstalled(bundlerDB, gatewayFind);
+				System.out.println("Information stored successfully.");
 			}
 		}
-		// TEMPORARY AREA ONLY TEST-----------------------------------------
-		Gateway gtTemp = new Gateway();
-
-		gtTemp.setMac(gatewayCommunication.getMac());
-		gtTemp.setIp(gatewayCommunication.getIp());
-		gtTemp.setStatus(true);
-
-		try {
-			
-			System.out.println("Status: " + bundlerDBService.toString());
-			//System.out.println("Status: " + gatewayDBService.toString());
-			
-			//System.out.println("gtTemp: " + gtTemp == null);
-			//System.out.println("gatewayDBService: " + gatewayDBService.getListGateway());
-			
-			//gatewayDBService.add(gtTemp);
-		} catch (Exception e) {
-			System.out.println("Storage operation failed");
-			e.printStackTrace();
-		}
-		System.out.println("It's working");
-		// -----------------------------------------
-
-//		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
-//
-//		for (BundlerCommunication bc : gatewayCommunication.getListBundler()) {
-//
-//			Bundler newBundler = new Bundler();
-//
-//			Bundler bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
-//
-//			if (bundlerDB == null) {
-//				newBundler.setName(bc.getName());
-//				newBundler.setLocation(bc.getLocation());
-//				new	Bundler.setVersion(bc.getVersion());
-//
-//				bundlerDBService.add(newBundler);
-//
-//				// corrigir busca
-//				bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
-//			}
-//
-//			bundlerDBService.addBundlerInstalled(bundlerDB, gatewayFind);
-//			System.out.println("Information stored successfully.");
-//		}
 	}
 
 	@POST
@@ -103,26 +70,21 @@ public class InformationBundler {
 	public void removeBundler(String value) {
 		System.out.println("Information received in disconnectedbundler");
 		System.out.println(value);
+		//criar bundle generico e realiza esse test.
+		Gson gson = new Gson();
+		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
 
-		// Gson gson = new Gson();
-		// GatewayCommunication gatewayCommunication = gson.fromJson(value,
-		// GatewayCommunication.class);
-		//
-		// Gateway gatewayFind =
-		// gatewayDBService.find(gatewayCommunication.getMac());
-		//
-		// for (BundlerCommunication bc : gatewayCommunication.getListBundler())
-		// {
-		//
-		// Bundler bundlerDB = bundlerDBService.find(bc.getName(),
-		// bc.getVersion());
-		//
-		// BundlerInstalled bundlerInstalled = bundlerDBService.
-		// findBundlerInstalled(bundlerDB, gatewayFind);
-		//
-		// bundlerDBService.removeBundlerInstalled(bundlerInstalled);
-		//
-		// }
+		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
+
+		for (BundlerCommunication bc : gatewayCommunication.getListBundler()) {
+
+			Bundler bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
+
+			BundlerInstalled bundlerInstalled = bundlerDBService.findBundlerInstalled(bundlerDB, gatewayFind);
+
+			bundlerDBService.removeBundlerInstalled(bundlerInstalled);
+
+		}
 
 	}
 

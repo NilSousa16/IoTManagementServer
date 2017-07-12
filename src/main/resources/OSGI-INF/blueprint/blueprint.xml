@@ -34,8 +34,6 @@
 	<reference id="groupManager" interface="org.apache.karaf.cellar.core.GroupManager">
 	</reference>
 
-	<!-- <reference id="gatewayServiceX" interface="br.ufba.dcc.wiser.fot.manager.service.GatewayDBService"> -->
-	<!-- </reference> -->
 	<!-- <reference id="bundleContext" interface="org.osgi.framework.BundleContext"> -->
 	<!-- </reference> -->
 
@@ -46,6 +44,9 @@
 
 	<service ref="bundlerService"
 		interface="br.ufba.dcc.wiser.fot.manager.service.BundlerDBService" />
+
+	<service ref="gatewayStatusService"
+		interface="br.ufba.dcc.wiser.fot.manager.service.GatewayStatusDBService" />
 
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>BEANS<<<<<<<<<<<<<<<<<<<<<<<< -->
 
@@ -59,6 +60,11 @@
 		<tx:transaction method="*" value="Required" />
 	</bean>
 
+	<bean id="gatewayStatusService" class="br.ufba.dcc.wiser.fot.manager.impl.GatewayStatusDBImpl">
+		<jpa:context unitname="person" property="entityManager" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+
 	<!-- <bean id="discovery_gateway" -->
 	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.DiscoveryGateway" -->
 	<!-- init-method="discovery"> -->
@@ -66,25 +72,51 @@
 	<!-- <property name="instance" ref="hazelcastInstance" /> -->
 	<!-- </bean> -->
 
-	<!-- <bean id="information_bundler" -->
-	<!-- class="br.ufba.dcc.wiser.fot.manager.administration.InformationBundler"> -->
-	<!-- <property name="gatewayDBService" ref="gatewayService" /> -->
-	<!-- <property name="bundlerDBService" ref="bundlerService" /> -->
-	<!-- </bean> -->
+	<bean id="information_bundler"
+		class="br.ufba.dcc.wiser.fot.manager.administration.InformationBundler">
+		<property name="gatewayDBService" ref="gatewayService" />
+		<property name="bundlerDBService" ref="bundlerService" />
+	</bean>
 
 	<bean id="information_gateway"
 		class="br.ufba.dcc.wiser.fot.manager.administration.InformationGateway">
 		<property name="gatewayDBService" ref="gatewayService" />
 	</bean>
-	
+
+	<bean id="information_gateway_status"
+		class="br.ufba.dcc.wiser.fot.manager.administration.InformationGatewayStatus">
+		<property name="gatewayStatusDBService" ref="gatewayStatusService" />
+		<property name="gatewayDBService" ref="gatewayService" />
+	</bean>
+
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>JAX-RS<<<<<<<<<<<<<<<<<<<<<<<<< -->
-	
+
 	<jaxrs:server id="information_gateway_method" address="/informationgateway">
 		<jaxrs:serviceBeans>
 			<ref component-id="information_gateway" />
 		</jaxrs:serviceBeans>
 	</jaxrs:server>
-	
+
+	<jaxrs:server id="information_gateway_status_method"
+		address="/informationgatewaystatus">
+		<jaxrs:serviceBeans>
+			<ref component-id="information_gateway_status" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+
+	<jaxrs:server id="information_bundler_method" address="/informationbundler">
+		<jaxrs:serviceBeans>
+			<ref component-id="information_bundler" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+
+	<!-- <jaxrs:server id="information_service_method" address="/informationservice"> -->
+	<!-- <jaxrs:serviceBeans> -->
+	<!-- <ref component-id="information_service" /> -->
+	<!-- </jaxrs:serviceBeans> -->
+	<!-- </jaxrs:server> -->
+
+
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>COMMANDS<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 	<command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
@@ -134,6 +166,20 @@
 			</action>
 		</command>
 
+		<command>
+			<action
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandGatewayStatusInformation">
+				<property name="gatewayStatusDBService" ref="gatewayStatusService" />
+			</action>
+		</command>
+		
+		<command>
+			<action
+				class="br.ufba.dcc.wiser.fot.manager.command.CommandListBundlerRegistered">
+				<property name="bundlerDBService" ref="bundlerService" />
+			</action>
+		</command>
+
 	</command-bundle>
 
 	<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>ROUTECAMEL<<<<<<<<<<<<<<<<<<<<<<<< -->
@@ -161,10 +207,10 @@
 		<!-- <to uri="bean:gateway_monitor?method=updateDataGateway" /> -->
 		<!-- </route> -->
 
-<!-- 		<route> -->
-<!-- 			<from uri="timer://myTimer?period=20000" /> -->
-<!-- 			<to uri="bean:information_gateway?method=addGatewayInformation" /> -->
-<!-- 		</route> -->
+		<!-- <route> -->
+		<!-- <from uri="timer://myTimer?period=20000" /> -->
+		<!-- <to uri="bean:information_gateway?method=addGatewayInformation" /> -->
+		<!-- </route> -->
 
 	</camelContext>
 </blueprint>

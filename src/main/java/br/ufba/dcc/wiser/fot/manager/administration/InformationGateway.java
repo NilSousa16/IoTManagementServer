@@ -1,8 +1,12 @@
 package br.ufba.dcc.wiser.fot.manager.administration;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
@@ -20,32 +24,13 @@ public class InformationGateway {
 		this.gatewayDBService = gatewayDBService;
 	}
 	
-	public void demoFunction() {
-		if(gatewayDBService == null) {
-			System.out.println(">>>Method InformationGateway isn't with the populated properties.");
-			
-			Gateway gateway = new Gateway();
-
-			gateway.setIp("000.000.000.000");
-			gateway.setMac("00-00-00-00");
-			gateway.setStatus(true);
-
-			gatewayDBService.add(gateway);
-
-			System.out.println(">>>Successfully Added");
-		} else {
-			System.out.println(">>>Method InformationGateway is with the populated properties.");
-		}
-	}
-
 	@POST
 	@Path("/addgateway")
 	@Produces("application/json")
-	public void addGatewayInformation(String value) {
+	public Response addGatewayInformation(String value) {
 
 		System.out.println("Ok - Information received in addGateway");
 		System.out.println(value);
-		value = "{\"description\":\"Debian_Light\",\"model\":\"0.11.2\",\"manufacturer\":\"Raspberry\",\"firmware\":\"2.1.0\",\"storage\":10982362,\"lastUpdate\":\"05/07/2017 5:50 - PM\",\"mac\":\"08-00-27-31-A7-71\",\"ip\":\"192.168.1.102\",\"hostName\":\"RaspberryHostName\",\"location\":\"-12.9990189,-38.5140298\"}";
 		
 		Gson gson = new Gson();
 		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
@@ -72,10 +57,26 @@ public class InformationGateway {
 			gateway.setIp(gatewayCommunication.getIp());
 			gateway.setMac(gatewayCommunication.getMac());
 			gateway.setStatus(true);
-
+			gateway.setDescription(gatewayCommunication.getDescription());
+			gateway.setFirmware(gatewayCommunication.getFirmware());
+			gateway.setHostName(gatewayCommunication.getHostName());
+			gateway.setManufacturer(gatewayCommunication.getManufacturer());
+			gateway.setModel(gatewayCommunication.getModel());
+			gateway.setStorage(gatewayCommunication.getStorage());
+			gateway.setLastUpdate(gatewayCommunication.getLastUpdate());
+			//add location
+			
 			gatewayDBService.add(gateway);
-
-			System.out.println(">>>>>>>>>>>>>>>>>>Add gateway ok");
+			
+			try {
+				String response = URLDecoder.decode("true", "UTF-8");
+				System.out.println(">>>>>>>>>>>>>>>>>>Add gateway ok");
+				return Response.ok(response).build();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace(); // To change body of catch statement use File |
+										// Settings | File Templates.
+			}
+			
 		} else {
 			if (gatewayCommunication.getDescription() != null && gatewayCommunication.getDescription() != "") {
 				gatewayFind.setDescription(gatewayCommunication.getDescription());
@@ -93,7 +94,7 @@ public class InformationGateway {
 				gatewayFind.setIp(gatewayCommunication.getIp());
 			}
 
-			if (gatewayCommunication.getLastUpdate() != null && gatewayCommunication.getLastUpdate() != "") {
+			if (gatewayCommunication.getLastUpdate() != null) {
 				gatewayFind.setLastUpdate(gatewayCommunication.getLastUpdate());
 			}
 
@@ -122,6 +123,9 @@ public class InformationGateway {
 
 			System.out.println(">>>>>>>>>>>>>>>>>>Update in add gateway ok");
 		}
+		
+		return null;
+		
 	}
 
 	@POST
@@ -165,7 +169,7 @@ public class InformationGateway {
 			gatewayFind.setIp(gatewayCommunication.getIp());
 		}
 
-		if (gatewayCommunication.getLastUpdate() != null && gatewayCommunication.getLastUpdate() != "") {
+		if (gatewayCommunication.getLastUpdate() != null) {
 			gatewayFind.setLastUpdate(gatewayCommunication.getLastUpdate());
 		}
 

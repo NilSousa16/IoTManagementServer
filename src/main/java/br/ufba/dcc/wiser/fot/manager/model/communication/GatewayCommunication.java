@@ -1,5 +1,6 @@
 package br.ufba.dcc.wiser.fot.manager.model.communication;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class GatewayCommunication {
@@ -10,8 +11,9 @@ public class GatewayCommunication {
 	private String firmware; // to be defined
 	private boolean status; // on-off used server side opportunistically
 	private long storage; // returns the list of components in existing stores
-	private String lastUpdate; // Method for the server side, but the client can
-								// register its actualization if possible
+	private Calendar lastUpdate; // Method for the server side, but the client
+									// can
+									// register its actualization if possible
 
 	// processor capacity
 	// private List<CPU> cpu; // returns information about CPU characteristics
@@ -72,11 +74,11 @@ public class GatewayCommunication {
 		this.storage = storage;
 	}
 
-	public String getLastUpdate() {
+	public Calendar getLastUpdate() {
 		return lastUpdate;
 	}
 
-	public void setLastUpdate(String lastUpdate) {
+	public void setLastUpdate(Calendar lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

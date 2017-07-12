@@ -1,12 +1,14 @@
 package br.ufba.dcc.wiser.fot.manager.model.relationship;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Calendar;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 
@@ -16,7 +18,7 @@ public class GatewayStatus implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int baterryLevel;
+	private double baterryLevel;
 	private long totalMemory;
 	private long usedMemory;
 	private long freeMemory;
@@ -24,17 +26,18 @@ public class GatewayStatus implements Serializable {
 	private double freeProcessor;
 
 	@Id
-	private Date date;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar date;
 
 	@Id
 	@ManyToOne
 	private Gateway gateway;
 
-	public int getBaterryLevel() {
+	public double getBaterryLevel() {
 		return baterryLevel;
 	}
 
-	public void setBaterryLevel(int baterryLevel) {
+	public void setBaterryLevel(double baterryLevel) {
 		this.baterryLevel = baterryLevel;
 	}
 
@@ -78,11 +81,11 @@ public class GatewayStatus implements Serializable {
 		this.freeProcessor = freeProcessor;
 	}
 
-	public Date getDate() {
+	public Calendar getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Calendar date) {
 		this.date = date;
 	}
 

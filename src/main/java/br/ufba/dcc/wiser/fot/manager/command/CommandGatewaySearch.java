@@ -46,9 +46,7 @@ public class CommandGatewaySearch implements Action {
 			System.out.println("---------------------------------------------------");
 
 			System.out.println("Search successfully completed.");
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			System.out.println("CommandGatewaySearch operation failed");
 			e.printStackTrace();
 		}

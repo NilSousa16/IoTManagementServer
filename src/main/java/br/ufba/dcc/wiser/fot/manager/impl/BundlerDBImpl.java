@@ -3,6 +3,8 @@ package br.ufba.dcc.wiser.fot.manager.impl;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import br.ufba.dcc.wiser.fot.manager.model.Bundler;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
@@ -44,12 +46,16 @@ public class BundlerDBImpl implements BundlerDBService {
 	}
 
 	public Bundler find(String name, String version) {
-		// corrigir para buscar por nome e versão
-		Bundler bundler = entityManager.find(Bundler.class, name);
-		if (bundler != null) {
-			return bundler;
+		String jpql = "select p from Bundler p where p.name = :name and p.version = :version";
+		TypedQuery<Bundler> query = entityManager.createQuery(jpql, Bundler.class);
+		query.setParameter("name", name);
+		query.setParameter("version", version);
+		try {
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			//e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	public void remove(String name) {
@@ -75,17 +81,17 @@ public class BundlerDBImpl implements BundlerDBService {
 		entityManager.persist(bundlerInstalled);
 	}
 
-	public BundlerInstalled findBundlerInstalled (Bundler bundler, Gateway gateway) {
-		BundlerInstalled bundlerInstalled = entityManager.find(BundlerInstalled.class, 
+	public BundlerInstalled findBundlerInstalled(Bundler bundler, Gateway gateway) {
+		BundlerInstalled bundlerInstalled = entityManager.find(BundlerInstalled.class,
 				new BundlerInstalledId(gateway, bundler));
-		
+
 		return bundlerInstalled;
 	}
-	
-	public void removeBundlerInstalled (BundlerInstalled bundlerInstalled) {
+
+	public void removeBundlerInstalled(BundlerInstalled bundlerInstalled) {
 		entityManager.remove(bundlerInstalled);
 	}
-	
+
 	public void updateBundlerInstalled(BundlerInstalled bundlerInstalled) {
 		entityManager.merge(bundlerInstalled);
 	}
@@ -94,5 +100,5 @@ public class BundlerDBImpl implements BundlerDBService {
 	public String toString() {
 		return "BundlerDBImpl in full operation";
 	}
-	
+
 }
