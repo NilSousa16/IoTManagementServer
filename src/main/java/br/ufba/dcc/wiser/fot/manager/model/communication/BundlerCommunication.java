@@ -1,11 +1,16 @@
 package br.ufba.dcc.wiser.fot.manager.model.communication;
 
+/**
+* Model for capturing the information received from the gateway.
+*
+* @author Nilson Rodrigues Sousa
+*/
 public class BundlerCommunication {
 
 	private String name;
 	private String version;
 	private String location;
-	private String state;
+	private String status;
 	// private List<Service> listServiceProvide;
 	// private List<Service> listServiceUse;
 
@@ -33,12 +38,12 @@ public class BundlerCommunication {
 		this.location = location;
 	}
 
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

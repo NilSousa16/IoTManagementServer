@@ -6,50 +6,62 @@ import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 
+import br.ufba.dcc.wiser.fot.manager.model.Actuator;
 import br.ufba.dcc.wiser.fot.manager.model.Device;
-import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 
 @Embeddable
-public class DeviceUsedId implements Serializable {
-	// Realizar composição de chaves para permitir repetições no devicedused
+public class ActuatorUsedId implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@GeneratedValue
 	private long id;
 
 	@ManyToOne
-	private Gateway gateway;
-
-	@ManyToOne
 	private Device device;
 
-	public DeviceUsedId() {
+	@ManyToOne
+	private Actuator actuator;
 
+	public ActuatorUsedId() {
+
+	}
+
+	public ActuatorUsedId(Device device, Actuator actuator) {
+		this.device = device;
+		this.actuator = actuator;
 	}
 
 	public long getId() {
 		return id;
 	}
 
-	public DeviceUsedId(Gateway gateway, Device device) {
-		this.gateway = gateway;
-		this.device = device;
-	}
-
-	public Gateway getGateway() {
-		return gateway;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public Device getDevice() {
 		return device;
 	}
 
+	public void setDevice(Device device) {
+		this.device = device;
+	}
+
+	public Actuator getActuator() {
+		return actuator;
+	}
+
+	public void setActuador(Actuator actuator) {
+		this.actuator = actuator;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((actuator == null) ? 0 : actuator.hashCode());
 		result = prime * result + ((device == null) ? 0 : device.hashCode());
-		result = prime * result + ((gateway == null) ? 0 : gateway.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
@@ -62,16 +74,16 @@ public class DeviceUsedId implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DeviceUsedId other = (DeviceUsedId) obj;
+		ActuatorUsedId other = (ActuatorUsedId) obj;
+		if (actuator == null) {
+			if (other.actuator != null)
+				return false;
+		} else if (!actuator.equals(other.actuator))
+			return false;
 		if (device == null) {
 			if (other.device != null)
 				return false;
 		} else if (!device.equals(other.device))
-			return false;
-		if (gateway == null) {
-			if (other.gateway != null)
-				return false;
-		} else if (!gateway.equals(other.gateway))
 			return false;
 		if (id != other.id)
 			return false;

@@ -9,6 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Entity
 @Table(name = "location")
 public class Location implements Serializable {
@@ -23,6 +27,9 @@ public class Location implements Serializable {
 
 	@OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
 	private List<Gateway> gateway;
+
+	@OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+	private List<Device> device;
 
 	private String description;
 
@@ -50,6 +57,14 @@ public class Location implements Serializable {
 		this.gateway = gateway;
 	}
 
+	public List<Device> getDevice() {
+		return device;
+	}
+
+	public void setDevice(List<Device> device) {
+		this.device = device;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -63,6 +78,7 @@ public class Location implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((device == null) ? 0 : device.hashCode());
 		result = prime * result + ((gateway == null) ? 0 : gateway.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(latitude);
@@ -85,6 +101,11 @@ public class Location implements Serializable {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (device == null) {
+			if (other.device != null)
+				return false;
+		} else if (!device.equals(other.device))
 			return false;
 		if (gateway == null) {
 			if (other.gateway != null)

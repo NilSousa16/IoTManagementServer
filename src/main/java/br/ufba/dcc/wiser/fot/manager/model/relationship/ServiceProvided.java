@@ -1,16 +1,19 @@
 package br.ufba.dcc.wiser.fot.manager.model.relationship;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
+/**
+ * Class for representation of relationships in the database.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Entity(name = "service_provided")
 public class ServiceProvided implements Serializable {
 
@@ -19,9 +22,9 @@ public class ServiceProvided implements Serializable {
 	@EmbeddedId
 	private ServiceProvidedId id;
 
-	@OneToMany(mappedBy = "serviceProvided", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private List<ServiceUsed> ServiceUsed;
+	@ManyToMany
+	@JoinTable(name = "bundler_used")
+	private List<BundlerInstalled> bundlerUsed = new ArrayList<BundlerInstalled>();
 
 	public ServiceProvidedId getId() {
 		return id;
@@ -31,12 +34,12 @@ public class ServiceProvided implements Serializable {
 		this.id = id;
 	}
 
-	public List<ServiceUsed> getServiceUsed() {
-		return ServiceUsed;
+	public List<BundlerInstalled> getBundlerUsed() {
+		return bundlerUsed;
 	}
 
-	public void setServiceUsed(List<ServiceUsed> serviceUsed) {
-		ServiceUsed = serviceUsed;
+	public void setBundlerUsed(List<BundlerInstalled> bundlerUsed) {
+		this.bundlerUsed = bundlerUsed;
 	}
 
 }

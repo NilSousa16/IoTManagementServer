@@ -8,7 +8,11 @@ import javax.persistence.ManyToOne;
 import br.ufba.dcc.wiser.fot.manager.model.Bundler;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 
-
+/**
+ * Class for representation of relationships in the database.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Embeddable
 public class BundlerInstalledId implements Serializable {
 

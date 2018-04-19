@@ -14,16 +14,18 @@ import br.ufba.dcc.wiser.fot.manager.service.GatewayStatusDBService;
 
 public class InformationGatewayStatus {
 
-	// assing in the blueprint
+	/* Instance of GatewayDBService to retrieve and store information */
 	private GatewayDBService gatewayDBService = null;
+	
+	/* Instance of GatewayStatusDBService to retrieve and store information */
 	private GatewayStatusDBService gatewayStatusDBService = null;
 
-	// Used by blueprint
+	/* Method used by blueprint to create gatewayDBService instance */
 	public void setGatewayDBService(GatewayDBService gatewayDBService) {
 		this.gatewayDBService = gatewayDBService;
 	}
 
-	// Used by blueprint
+	/* Method used by blueprint to create setGatewayStatusDBService instance */
 	public void setGatewayStatusDBService(GatewayStatusDBService gatewayStatusDBService) {
 		this.gatewayStatusDBService = gatewayStatusDBService;
 	}
@@ -37,11 +39,15 @@ public class InformationGatewayStatus {
 		System.out.println(value);
 
 		Gson gson = new Gson();
-		GatewayStatusCommunication gatewayStatusCommunication = gson.fromJson(value, GatewayStatusCommunication.class);
-		Gateway gatewayFind = gatewayDBService.find(gatewayStatusCommunication.getMac());
+		GatewayStatusCommunication gatewayStatusCommunication = new GatewayStatusCommunication();
+		gatewayStatusCommunication = gson.fromJson(value, GatewayStatusCommunication.class);
+		
+		Gateway gatewayFind = new Gateway();
+		gatewayFind = gatewayDBService.find(gatewayStatusCommunication.getMac());
 		
 		if (gatewayFind != null) {
-
+			gatewayFind.setListBundlerInstalled(null);
+			
 			GatewayStatus gatewayStatus = new GatewayStatus();
 
 			gatewayStatus.setGateway(gatewayFind);

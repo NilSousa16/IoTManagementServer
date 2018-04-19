@@ -1,8 +1,14 @@
 package br.ufba.dcc.wiser.fot.manager.model.communication;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Model for capturing the information received from the gateway.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 public class GatewayCommunication {
 
 	private String description; // description of OS in use
@@ -21,10 +27,15 @@ public class GatewayCommunication {
 	private String ip; // returns the ip address
 	private String hostName; // returns the hostname
 	private String location; // returns the fake location
-	private List<BundlerCommunication> listBundler;
+	private List<BundlerCommunication> listBundler = new ArrayList<BundlerCommunication>();;
 	// private String[] intefaceNetwork; //returns a list with the existing
 	// network interfaces
 	private List<ServiceCommunication> listService;
+
+	/* Describe information about devices connected to the gateway */
+	private List<DeviceCommunication> listDevice = new ArrayList<DeviceCommunication>();
+
+	private int flag;
 
 	public String getDescription() {
 		return description;
@@ -144,6 +155,22 @@ public class GatewayCommunication {
 
 	public void setListService(List<ServiceCommunication> listService) {
 		this.listService = listService;
+	}
+
+	public List<DeviceCommunication> getListDevice() {
+		return listDevice;
+	}
+
+	public void setListDevice(List<DeviceCommunication> listDevice) {
+		this.listDevice = listDevice;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 
 }

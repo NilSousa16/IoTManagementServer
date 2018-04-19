@@ -9,8 +9,13 @@ import org.apache.felix.service.command.CommandSession;
 import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayStatusDBService;
 
-@Command(scope = "wiser", name = "gateway-status-information",  description = "Return historic gateways status")
-public class CommandGatewayStatusInformation implements Action{
+/**
+ * Class responsible for returning the status log of system gateways.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
+@Command(scope = "wiser", name = "gateway-status-information", description = "Return historic gateways status")
+public class CommandGatewayStatusInformation implements Action {
 
 	private GatewayStatusDBService gatewayStatusDBService = null;
 
@@ -18,6 +23,14 @@ public class CommandGatewayStatusInformation implements Action{
 		this.gatewayStatusDBService = gatewayStatusDBService;
 	}
 
+	/**
+	 * Method that returns gateway status history.
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @param session
+	 *            CommandSession
+	 * @return Object - Reply required by karaf
+	 */
 	public Object execute(CommandSession session) throws Exception {
 		try {
 			List<GatewayStatus> listGatewayStatus = gatewayStatusDBService.getListGateway();

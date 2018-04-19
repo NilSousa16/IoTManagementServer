@@ -13,9 +13,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Type;
+
 import br.ufba.dcc.wiser.fot.manager.model.relationship.BundlerInstalled;
 import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
 
+/**
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Entity
 @Table(name = "gateway")
 public class Gateway implements Serializable {
@@ -29,8 +35,11 @@ public class Gateway implements Serializable {
 	private String model;
 	private String manufacturer;
 	private String firmware;
+
+	@Type(type = "true_false")
 	private boolean status;
 	private long storage;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar lastUpdate;
 	private String ip;
@@ -43,7 +52,10 @@ public class Gateway implements Serializable {
 	private List<GatewayStatus> gatewayStatus;
 
 	@OneToMany(mappedBy = "id.gateway", fetch = FetchType.LAZY)
-	private List<BundlerInstalled> bundlerInstalled;
+	private List<BundlerInstalled> listBundlerInstalled;
+
+	@OneToMany(mappedBy = "gateway", fetch = FetchType.LAZY)
+	private List<Device> listDevice;
 
 	// private String[] intefaceNetwork;
 
@@ -143,25 +155,34 @@ public class Gateway implements Serializable {
 		this.gatewayStatus = gatewayStatus;
 	}
 
-	public List<BundlerInstalled> getBundlerInstalled() {
-		return bundlerInstalled;
+	public List<BundlerInstalled> getListBundlerInstalled() {
+		return listBundlerInstalled;
 	}
 
-	public void setBundlerInstalled(List<BundlerInstalled> bundlerInstalled) {
-		this.bundlerInstalled = bundlerInstalled;
+	public void setListBundlerInstalled(List<BundlerInstalled> listBundlerInstalled) {
+		this.listBundlerInstalled = listBundlerInstalled;
+	}
+
+	public List<Device> getListDevice() {
+		return listDevice;
+	}
+
+	public void setListDevice(List<Device> listDevice) {
+		this.listDevice = listDevice;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((bundlerInstalled == null) ? 0 : bundlerInstalled.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((firmware == null) ? 0 : firmware.hashCode());
 		result = prime * result + ((gatewayStatus == null) ? 0 : gatewayStatus.hashCode());
 		result = prime * result + ((hostName == null) ? 0 : hostName.hashCode());
 		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
 		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
+		result = prime * result + ((listBundlerInstalled == null) ? 0 : listBundlerInstalled.hashCode());
+		result = prime * result + ((listDevice == null) ? 0 : listDevice.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + ((mac == null) ? 0 : mac.hashCode());
 		result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
@@ -180,11 +201,6 @@ public class Gateway implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Gateway other = (Gateway) obj;
-		if (bundlerInstalled == null) {
-			if (other.bundlerInstalled != null)
-				return false;
-		} else if (!bundlerInstalled.equals(other.bundlerInstalled))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -214,6 +230,16 @@ public class Gateway implements Serializable {
 			if (other.lastUpdate != null)
 				return false;
 		} else if (!lastUpdate.equals(other.lastUpdate))
+			return false;
+		if (listBundlerInstalled == null) {
+			if (other.listBundlerInstalled != null)
+				return false;
+		} else if (!listBundlerInstalled.equals(other.listBundlerInstalled))
+			return false;
+		if (listDevice == null) {
+			if (other.listDevice != null)
+				return false;
+		} else if (!listDevice.equals(other.listDevice))
 			return false;
 		if (location == null) {
 			if (other.location != null)

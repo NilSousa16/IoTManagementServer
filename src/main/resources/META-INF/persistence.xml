@@ -3,17 +3,19 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              version="1.0">
   <persistence-unit name="person" transaction-type="JTA">
-<!--     <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/h2ds)</jta-data-source> -->
-	
-	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-	
-	<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=person)</jta-data-source>
+  	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+  
+	<!-- <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/h2ds)</jta-data-source> -->
+	<!-- <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/person)</jta-data-source> -->
+	<jta-data-source>osgi:service/person</jta-data-source>
     
     <properties>
       <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-      <property name="hibernate.archive.autodetection" value="class"/>
+      
+<!--     funcionou sem essa propriedade  <property name="hibernate.archive.autodetection" value="class"/>       -->
+      <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
     </properties>
     
   </persistence-unit>

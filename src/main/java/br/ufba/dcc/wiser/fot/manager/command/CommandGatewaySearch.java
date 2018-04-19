@@ -8,6 +8,11 @@ import org.apache.felix.service.command.CommandSession;
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
+/**
+ * Class responsible for returning information from a specific gateway.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Command(scope = "wiser", name = "gateway-search", description = "Search gateways")
 public class CommandGatewaySearch implements Action {
 
@@ -20,6 +25,15 @@ public class CommandGatewaySearch implements Action {
 		this.gatewayDBService = gatewayDBService;
 	}
 
+	/**
+	 * Method responsible for returning the information of a specific gateway
+	 * through the MAC address.
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @param session
+	 *            CommandSession
+	 * @return Object - Reply required by karaf
+	 */
 	public Object execute(CommandSession session) throws Exception {
 		try {
 			Gateway gateway = gatewayDBService.find(mac);

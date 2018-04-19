@@ -15,10 +15,12 @@ public interface BundlerDBService {
 	public void remove(String name);
 	public List<Bundler> getListBundler();
 	
-	public void addBundlerInstalled(Bundler bundler, Gateway gateway);
+	public void addBundlerInstalled(Bundler bundler, Gateway gateway, String status);
 	public BundlerInstalled findBundlerInstalled (Bundler bundler, Gateway gateway);
 	public void removeBundlerInstalled (BundlerInstalled bundlerInstalled);
 	public void updateBundlerInstalled(BundlerInstalled bundlerInstalled);
+	public List<Gateway> getListBundlersGateway();
+	public Gateway listBundlerInstalled (String mac);
 
 	
 }

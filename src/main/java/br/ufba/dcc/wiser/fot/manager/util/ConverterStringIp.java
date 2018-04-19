@@ -1,5 +1,10 @@
 package br.ufba.dcc.wiser.fot.manager.util;
 
+/**
+ * Class with utility methods
+ * 
+ * @author Nilson Rodrigues Sousa
+ */
 public class ConverterStringIp {
 	
 	public static String converterStringIp (String ip){

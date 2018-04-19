@@ -7,9 +7,17 @@ import javax.persistence.ManyToOne;
 
 import br.ufba.dcc.wiser.fot.manager.model.Service;
 
+/**
+ * Class for representation of relationships in the database.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Embeddable
 public class ServiceProvidedId implements Serializable {
-
+	// originalmente um bundler pode prover um serviço duas vezes, mas no
+	// momento isso será ignorado visto que as informações de serviços são
+	// apenas para vizualização e tomada de decisão e não para modificação de
+	// configuração - anotação 18/08/17
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne

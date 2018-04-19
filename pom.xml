@@ -14,7 +14,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jersey.version>1.19</jersey.version>
 	</properties>
 
 	<!-- Build specifications -->
@@ -36,6 +35,17 @@
 							<!-- org.hibernate.osgitest.entity IN -->
 						</Export-Package>
 						<Import-Package> <!--IN -->
+							<!-- INSERT IN 24/12/2017 -->
+							<!-- javax.wsdl, -->
+							<!-- javax.xml.bind, -->
+							<!-- javax.xml.bind.annotation, -->
+							<!-- javax.ws.rs, -->
+							<!-- javax.ws.rs.core, -->
+							org.apache.commons.httpclient,
+							org.apache.commons.httpclient.methods,
+							<!-- org.osgi.service.blueprint, -->
+							<!-- javax.ws.rs.ext, -->
+							<!-- INSERT IN 24/12/2017 -->
 							org.hibernate.jpa,
 							org.apache.felix.service.command,
 							org.apache.felix.gogo.commands,
@@ -48,9 +58,9 @@
 							*
 						</Import-Package>
 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence> <!--IN -->
-						<!-- SE DER RUIM PO TIRAR  -->
-<!-- 						<Embed-Dependency>scope=compile|runtime</Embed-Dependency> -->
-<!-- 						<Embed-Transitive>true</Embed-Transitive> -->
+						<!-- SE DER RUIM PO TIRAR -->
+						<!-- <Embed-Dependency>scope=compile|runtime</Embed-Dependency> -->
+						<!-- <Embed-Transitive>true</Embed-Transitive> -->
 						<!-- FIM DO QUE PODE DAR RUIM -->
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
@@ -105,6 +115,12 @@
 	<!-- Dependencies -->
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.commons-httpclient</artifactId>
+			<version>3.1_7</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
 		<dependency>
@@ -320,6 +336,10 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0</version>
 		</dependency>
+
+		<!-- INSERT IN 24/12/2017 -->
+
+		<!-- INSERT IN 24/12/2017 -->
 
 	</dependencies>
 

@@ -18,7 +18,8 @@ public interface ServiceDBService {
 	public void removeServiceProvided(BundlerInstalled bundlerInstalled, Service serviceFind);
 	public ServiceProvided findServiceProvided(BundlerInstalled bundlerInstalled, Service serviceFind);
 	
-	public void addServiceUsed(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
-	public void removeServiceUsed(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
+	public void addBundlerUser(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
+	public void removeBundlerUser(BundlerInstalled bundlerInstalledUse, ServiceProvided serviceProvided);
+	public List<ServiceProvided> findBundlerUser(String mac);
 	
 }

@@ -6,9 +6,15 @@ import java.util.List;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Class for representation of relationships in the database.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
 @Entity
 @Table(name = "bundler_installed")
 public class BundlerInstalled implements Serializable {
@@ -18,13 +24,13 @@ public class BundlerInstalled implements Serializable {
 	@EmbeddedId
 	private BundlerInstalledId id;
 
-	private boolean status;
+	private String status;
 
 	@OneToMany(mappedBy = "id.bundleInstalled", fetch = FetchType.LAZY)
 	private List<ServiceProvided> serviceProvided;
-
-	@OneToMany(mappedBy = "bundleInstalled", fetch = FetchType.LAZY)
-	private List<ServiceUsed> ServiceUsed;
+	
+	@ManyToMany(mappedBy = "bundlerUsed")
+	private List<ServiceProvided> serviceUsed;
 
 	public BundlerInstalledId getId() {
 		return id;
@@ -34,11 +40,11 @@ public class BundlerInstalled implements Serializable {
 		this.id = id;
 	}
 
-	public boolean isStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -49,13 +55,13 @@ public class BundlerInstalled implements Serializable {
 	public void setServiceProvided(List<ServiceProvided> serviceProvided) {
 		this.serviceProvided = serviceProvided;
 	}
-
-	public List<ServiceUsed> getServiceUsed() {
-		return ServiceUsed;
+	
+	public List<ServiceProvided> getServiceUsed() {
+		return serviceUsed;
 	}
 
-	public void setServiceUsed(List<ServiceUsed> serviceUsed) {
-		ServiceUsed = serviceUsed;
+	public void setServiceUsed(List<ServiceProvided> serviceUsed) {
+		this.serviceUsed = serviceUsed;
 	}
 
 }

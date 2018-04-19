@@ -16,16 +16,18 @@ import br.ufba.dcc.wiser.fot.manager.service.GatewayDBService;
 
 public class InformationBundler {
 
-	// assing in the blueprint
+	/* Instance of GatewayDBService to retrieve and store information */
 	private GatewayDBService gatewayDBService = null;
+	
+	/* BundlerDBService instance for storing information */
 	private BundlerDBService bundlerDBService = null;
 
-	// Used by blueprint
+	/* Method used by blueprint to create gatewayDBService instance */
 	public void setGatewayDBService(GatewayDBService gatewayDBService) {
 		this.gatewayDBService = gatewayDBService;
 	}
 
-	// Used by blueprint
+	/* Method used by blueprint to create bundlerDBService instance */
 	public void setBundlerDBService(BundlerDBService bundlerDBService) {
 		this.bundlerDBService = bundlerDBService;
 	}
@@ -39,10 +41,12 @@ public class InformationBundler {
 		System.out.println(value);
 
 		Gson gson = new Gson();
-		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
-		System.out.println("Before gatewayDBService.find(gatewayCommunication.getMac())");
-		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
-		System.out.println("After gatewayDBService.find(gatewayCommunication.getMac())");
+		GatewayCommunication gatewayCommunication = new GatewayCommunication();
+		gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
+
+		Gateway gatewayFind = new Gateway();
+		gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
+
 		if (gatewayFind != null) {
 			for (BundlerCommunication bc : gatewayCommunication.getListBundler()) {
 
@@ -58,9 +62,10 @@ public class InformationBundler {
 					bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
 				}
 
-				bundlerDBService.addBundlerInstalled(bundlerDB, gatewayFind);
-				System.out.println("Information stored successfully.");
+				bundlerDBService.addBundlerInstalled(bundlerDB, gatewayFind, bc.getStatus());
+
 			}
+			System.out.println("Bundlers stored successfully.");
 		}
 	}
 
@@ -70,7 +75,32 @@ public class InformationBundler {
 	public void removeBundler(String value) {
 		System.out.println("Information received in disconnectedbundler");
 		System.out.println(value);
-		//criar bundle generico e realiza esse test.
+
+		Gson gson = new Gson();
+		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
+
+		Gateway gatewayFind = gatewayDBService.find(gatewayCommunication.getMac());
+
+		for (BundlerCommunication bc : gatewayCommunication.getListBundler()) {
+
+			Bundler bundlerDB = bundlerDBService.find(bc.getName(), bc.getVersion());
+
+			BundlerInstalled bundlerInstalled = bundlerDBService.findBundlerInstalled(bundlerDB, gatewayFind);
+			System.out.println(">>>>bundlerInstalled find: " + bundlerInstalled.getId().getGateway().getMac());
+			System.out.println(">>>>bundlerInstalled find: " + bundlerInstalled.getId().getBundler().getName());
+			bundlerDBService.removeBundlerInstalled(bundlerInstalled);
+
+		}
+		System.out.println("Bundlers successfully disconnected.");
+	}
+
+	@POST
+	@Path("/alteredbundler")
+	@Produces("application/json")
+	public void alterBundlerInformation(String value) {
+		System.out.println("Information received in alterBundlerInformation");
+		System.out.println(value);
+
 		Gson gson = new Gson();
 		GatewayCommunication gatewayCommunication = gson.fromJson(value, GatewayCommunication.class);
 
@@ -82,44 +112,13 @@ public class InformationBundler {
 
 			BundlerInstalled bundlerInstalled = bundlerDBService.findBundlerInstalled(bundlerDB, gatewayFind);
 
-			bundlerDBService.removeBundlerInstalled(bundlerInstalled);
+			if (!(bundlerInstalled.getStatus().equals(bc.getStatus()))) {
+				bundlerInstalled.setStatus(bc.getStatus());
+			} 
+
+			bundlerDBService.updateBundlerInstalled(bundlerInstalled);
 
 		}
-
-	}
-
-	@POST
-	@Path("/alteredbundler")
-	@Produces("application/json")
-	public void alterBundlerInformation(String value) {
-		System.out.println("Information received in alterBundlerInformation");
-		System.out.println(value);
-
-		// Gson gson = new Gson();
-		// GatewayCommunication gatewayCommunication = gson.fromJson(value,
-		// GatewayCommunication.class);
-		//
-		// Gateway gatewayFind =
-		// gatewayDBService.find(gatewayCommunication.getMac());
-		//
-		// for (BundlerCommunication bc : gatewayCommunication.getListBundler())
-		// {
-		//
-		// Bundler bundlerDB = bundlerDBService.find(bc.getName(),
-		// bc.getVersion());
-		//
-		// BundlerInstalled bundlerInstalled = bundlerDBService.
-		// findBundlerInstalled(bundlerDB, gatewayFind);
-		//
-		// if(bundlerInstalled.isStatus() == true) {
-		// bundlerInstalled.setStatus(false);
-		// } else {
-		// bundlerInstalled.setStatus(true);
-		// }
-		//
-		// bundlerDBService.updateBundlerInstalled(bundlerInstalled);
-		//
-		// }
 
 	}
 

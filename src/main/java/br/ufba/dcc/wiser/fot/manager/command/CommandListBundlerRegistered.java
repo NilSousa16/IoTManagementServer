@@ -7,12 +7,15 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 
 import br.ufba.dcc.wiser.fot.manager.model.Bundler;
-import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
 import br.ufba.dcc.wiser.fot.manager.service.BundlerDBService;
-import br.ufba.dcc.wiser.fot.manager.service.GatewayStatusDBService;
 
-@Command(scope = "wiser", name = "list-bundler-registered",  description = "Lists the bundles that had data stored")
-public class CommandListBundlerRegistered implements Action{
+/**
+ * Class responsible for listing the bundles already stored in the database.
+ *
+ * @author Nilson Rodrigues Sousa
+ */
+@Command(scope = "wiser", name = "list-bundler-registered", description = "Lists the bundles that had data stored")
+public class CommandListBundlerRegistered implements Action {
 
 	private BundlerDBService bundlerDBService = null;
 
@@ -20,6 +23,14 @@ public class CommandListBundlerRegistered implements Action{
 		this.bundlerDBService = bundlerDBService;
 	}
 
+	/**
+	 * Method that lists the bundles that have registration within the database.
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @param session
+	 *            CommandSession
+	 * @return Object - Reply required by karaf
+	 */
 	public Object execute(CommandSession session) throws Exception {
 		try {
 			List<Bundler> listBundler = bundlerDBService.getListBundler();
@@ -31,7 +42,7 @@ public class CommandListBundlerRegistered implements Action{
 				for (Bundler bundler : listBundler) {
 					System.out.println(">>> Bundler Name: " + bundler.getName());
 					System.out.println(">>> Bundler Version: " + bundler.getVersion());
-					System.out.println("Bundler Location:" + bundler.getLocation());
+					System.out.println(">>> Bundler Location:" + bundler.getLocation());
 				}
 			} else {
 				System.out.println("\nNo items stored.\n");

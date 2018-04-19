@@ -6,9 +6,19 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 
+/**
+ * Class with utility methods
+ * 
+ * @author Nilson Rodrigues Sousa
+ */
 public class InfraUtil {
 	
-	// returns the ip address of the local machine
+	/**
+	 * Method that returns the ip address of the local machine
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @return String - ip address
+	 */
 	public static String getIpMachine() {
 		String ipAddress = null;
         Enumeration<NetworkInterface> net = null;
@@ -32,7 +42,12 @@ public class InfraUtil {
         return ipAddress;
 	}
 	
-	// returns date and time in the format dd/MM/yyyy h:mm - PM
+	/**
+	 * Method that returns date and time in the format dd/MM/yyyy h:mm - PM
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @return String - date and time
+	 */
 	public static String getDateHour() {
 		String data = "dd/MM/yyyy";
 		String hora = "h:mm - a";

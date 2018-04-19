@@ -7,6 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+*
+* @author Nilson Rodrigues Sousa
+*/
 @Entity
 @Table(name = "bundler")
 public class Bundler implements Serializable {

@@ -9,6 +9,11 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Class with utility methods for capturing JSON information.
+ * 
+ * @author Nilson Rodrigues Sousa
+ */
 public class JsonUtil {
 
 	public JSONObject getInformation(String ip, String domain, String path)

@@ -6,11 +6,12 @@ import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 
 public interface GatewayDBService {
 	
-	void add(Gateway gateway);
-	void update(Gateway gateway);
-	Gateway find(String mac);
-	void desactive(String ip) throws Exception;
-	void active(Gateway gateway);
-	List<Gateway> getListGateway();
+	public void add(Gateway gateway);
+	public void update(Gateway gateway);
+	public Gateway find(String mac);
+	public void desactive(String ip) throws Exception;
+	public void active(Gateway gateway);
+	public List<Gateway> getListGateway();
+	public Gateway getListGateway(String mac);
 
 }

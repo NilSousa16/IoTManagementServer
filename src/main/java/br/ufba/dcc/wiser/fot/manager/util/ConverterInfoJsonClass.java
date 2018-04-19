@@ -10,9 +10,19 @@ import com.google.gson.JsonSyntaxException;
 
 import br.ufba.dcc.wiser.fot.manager.model.Gateway;
 
+/**
+ * Class with utility methods
+ * 
+ * @author Nilson Rodrigues Sousa
+ */
 public class ConverterInfoJsonClass<T> {
 
-	// method used to return as information from a class that is in json
+	/**
+	 * Method used to return as information from a class that is in json
+	 * 
+	 * @author Nilson Rodrigues Sousa
+	 * @return T - returns JSON captured T class information
+	 */
 	public T getInfo(JSONObject jsonObject, Class<T> classe)
 			throws JsonSyntaxException, JSONException, ClassNotFoundException, FileNotFoundException {
 		System.out.println(">>>>>>>>>>>>>>>>Entrou no método getInfo()");

@@ -23,26 +23,33 @@ import br.ufba.dcc.wiser.fot.manager.util.JsonUtil;
  */
 public class DiscoveryGateway {
 
-	private HazelcastInstance instance = null;
+	/* Instance of hazelcast to capture system information  */
+	private HazelcastInstance instance;
 
+	/* GatewayDBService instance for storing information */
 	private GatewayDBService gatewayDBService = null;
 
+	/* Stored listGateway for change verification */
 	private static Set<Member> listGateway = new HashSet<Member>();
 
+	/* List of new gateways for storage */
 	Set<Member> listNewGateway = new HashSet<Member>();
+	
+	/* List of disconnected gateways for system upgrade */
 	Set<Member> listDisconnectedGateway = new HashSet<Member>();
 
+	/* Used to retrieve a JSON object */
 	private JsonUtil json = new JsonUtil();
 
-	// Simulates a log
+	/* Simulates a log */
 	public static String log = "";
 
-	// Used by blueprint
+	/* Method used by blueprint to create instance of hazelcast */
 	public void setInstance(HazelcastInstance instance) {
 		this.instance = instance;
 	}
 
-	// Used by blueprint
+	/* Method used by blueprint to create gatewayDBService instance */
 	public void setGatewayDBService(GatewayDBService gatewayDBService) {
 		this.gatewayDBService = gatewayDBService;
 	}
@@ -53,7 +60,7 @@ public class DiscoveryGateway {
 	 * @author Nilson Rodrigues Sousa
 	 */
 	public void discovery() {
-		System.out.println("Entry method discovery");
+		System.out.println("Entry method discovery...");
 		try {
 
 			Cluster clusterInst = instance.getCluster();
@@ -64,7 +71,7 @@ public class DiscoveryGateway {
 
 			Set<Member> listGatewayAux = new HashSet<Member>();
 
-			// Executed only when the list is empty or in the first iteration
+			/* Executed only when the list is empty or in the first iteration */
 			if (listGateway.isEmpty()) {
 				for (Member m : members) {
 					if (InfraUtil.getIpMachine()
@@ -91,9 +98,9 @@ public class DiscoveryGateway {
 				}
 
 				listDisconnectedGateway.addAll(listGateway);
-				// return new gateways
+				/* return new gateways */
 				listNewGateway.removeAll(listGateway);
-				// return gateways disconnected
+				/* return gateways disconnected */
 				listDisconnectedGateway.removeAll(listGatewayAux);
 
 				if (!listNewGateway.isEmpty()) {
@@ -139,7 +146,7 @@ public class DiscoveryGateway {
 				if (gateway != null) {
 					gateway.setIp(ip);
 					gateway.setStatus(true);
-					// replacing the activate method
+					/* replacing the activate method */
 					gatewayDBService.update(gateway);
 
 				} else {

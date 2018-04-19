@@ -7,8 +7,8 @@ import br.ufba.dcc.wiser.fot.manager.model.relationship.GatewayStatus;
 
 public interface GatewayStatusDBService {
 
-	void add(GatewayStatus gatewayStatus);
-	List<GatewayStatus> findGatewayInformation(Gateway gateway);
-	List<GatewayStatus> getListGateway();
+	public void add(GatewayStatus gatewayStatus);
+	public List<GatewayStatus> findGatewayInformation(Gateway gateway);
+	public List<GatewayStatus> getListGateway();
 
 }
